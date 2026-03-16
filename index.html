@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运大抽奖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .login-form, .draw-section, .result-section {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-tab.active {
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .prize-display {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .prize-name {
+            font-size: 48px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .captcha-send {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .captcha-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 幸运大抽奖 🎉</h1>
+
+        <!-- 登录表单 -->
+        <div id="loginSection" class="login-form">
+            <div class="login-tabs">
+                <div class="login-tab active" onclick="switchLoginType('id_card')">身份证号</div>
+                <div class="login-tab" onclick="switchLoginType('phone')">手机验证</div>
+            </div>
+
+            <div id="idCardForm">
+                <div class="form-group">
+                    <label for="idCard">请输入身份证号（18 位）</label>
+                    <input type="text" id="idCard" placeholder="请输入 18 位身份证号码" maxlength="18">
+                </div>
+                <div class="form-group">
+                    <label for="name">姓名</label>
+                    <input type="text" id="name" placeholder="请输入您的姓名">
+                </div>
+                <button class="btn" onclick="login()">登录并抽奖</button>
+            </div>
+
+            <div id="phoneForm" class="hidden">
+                <div class="form-group">
+                    <label for="phone">请输入手机号</label>
+                    <input type="tel" id="phone" placeholder="请输入 11 位手机号码" maxlength="11">
+                </div>
+                <div class="form-group">
+                    <label for="captcha">验证码</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="captcha" placeholder="请输入验证码" style="flex: 1;">
+                        <button class="captcha-send" id="sendCaptcha" onclick="sendCaptcha()">获取验证码</button>
+                    </div>
+                    <small style="color: #999; display: block; margin-top: 5px;">测试验证码：123456</small>
+                </div>
+                <div class="form-group">
+                    <label for="namePhone">姓名</label>
+                    <input type="text" id="namePhone" placeholder="请输入您的姓名">
+                </div>
+                <button class="btn" onclick="loginWithPhone()">登录并抽奖</button>
+            </div>
+
+            <div id="loginMessage" class="message"></div>
+        </div>
+
+        <!-- 抽奖区域 -->
+        <div id="drawSection" class="draw-section hidden">
+            <div class="user-info">
+                <p><strong>用户：</strong><span id="userName"></span></p>
+                <p><strong>登录方式：</strong><span id="loginTypeText"></span></p>
+            </div>
+
+            <button class="btn" id="drawBtn" onclick="startDraw()">开始抽奖</button>
+
+            <div id="drawResult" class="result-section hidden">
+                <div class="prize-display">
+                    <div class="prize-name" id="prizeName">???</div>
+                </div>
+                <p id="congratulations" style="font-size: 20px; color: #333; margin-top: 20px;"></p>
+            </div>
+
+            <div id="alreadyDrawn" class="message success hidden">
+                <p>您已经抽过奖了！</p>
+                <p id="previousPrize" style="margin-top: 10px; font-weight: bold;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLoginType = 'id_card';
+        let currentUser = null;
+
+        // 切换登录类型
+        function switchLoginType(type) {
+            currentLoginType = type;
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (type === 'id_card') {
+                document.getElementById('idCardForm').classList.remove('hidden');
+                document.getElementById('phoneForm').classList.add('hidden');
+            } else {
+                document.getElementById('idCardForm').classList.add('hidden');
+                document.getElementById('phoneForm').classList.remove('hidden');
+            }
+        }
+
+        // 发送验证码（模拟）
+        function sendCaptcha() {
+            const phone = document.getElementById('phone').value;
+            if (!phone || phone.length !== 11) {
+                showMessage('请先输入正确的手机号', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('sendCaptcha');
+            btn.disabled = true;
+            let count = 60;
+            btn.textContent = `${count}秒后重发`;
+
+            const timer = setInterval(() => {
+                count--;
+                btn.textContent = `${count}秒后重发`;
+                if (count <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                }
+            }, 1000);
+
+            showMessage('验证码已发送（测试码：123456）', 'success');
+        }
+
+        // 显示消息
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('loginMessage');
+            messageEl.textContent = msg;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // 身份证号登录
+        async function login() {
+            const idCard = document.getElementById('idCard').value.trim();
+            const name = document.getElementById('name').value.trim();
+
+            if (!idCard || idCard.length !== 18) {
+                showMessage('请输入正确的 18 位身份证号', 'error');
+                return;
+            }
+
+            if (!name) {
+                showMessage('请输入姓名', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'id_card',
+                        identifier: idCard,
+                        name: name
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showDrawSection(name, '身份证号', result.has_drawn, result.prize);
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 手机号登录
+        async function loginWithPhone() {
+            const phone = document.getElementById('phone').value.trim();
+            const captcha = document.getElementById('captcha').value.trim();
+            const name = document.getElementById('namePhone').value.trim();
+
+            if (!phone || phone.length !== 11) {
+                showMessage('请输入正确的 11 位手机号', 'error');
+                return;
+            }
+
+            if (!captcha) {
+                showMessage('请输入验证码', 'error');
+                return;
+            }
+
+            if (!name) {
+                showMessage('请输入姓名', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'phone',
+                        identifier: phone,
+                        code: captcha,
+                        name: name
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showDrawSection(name, '手机号', result.has_drawn, result.prize);
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 显示抽奖区域
+        function showDrawSection(name, loginType, hasDrawn, prize) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('drawSection').classList.remove('hidden');
+            
+            document.getElementById('userName').textContent = name;
+            document.getElementById('loginTypeText').textContent = loginType;
+
+            if (hasDrawn) {
+                document.getElementById('drawBtn').disabled = true;
+                document.getElementById('drawBtn').textContent = '已抽奖';
+                document.getElementById('alreadyDrawn').classList.remove('hidden');
+                if (prize) {
+                    document.getElementById('previousPrize').textContent = `您获得的奖项：${prize}`;
+                }
+            }
+        }
+
+        // 开始抽奖
+        async function startDraw() {
+            const drawBtn = document.getElementById('drawBtn');
+            drawBtn.disabled = true;
+            drawBtn.textContent = '抽奖中...';
+
+            try {
+                const response = await fetch('/api/draw', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 显示抽奖结果
+                    document.getElementById('drawResult').classList.remove('hidden');
+                    document.getElementById('prizeName').textContent = result.prize;
+                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${result.prize}！🎉`;
+                } else {
+                    alert(result.message);
+                    drawBtn.disabled = false;
+                    drawBtn.textContent = '开始抽奖';
+                }
+            } catch (error) {
+                alert('网络错误，请稍后再试');
+                drawBtn.disabled = false;
+                drawBtn.textContent = '开始抽奖';
+            }
+        }
+    </script>
+</body>
+</html>

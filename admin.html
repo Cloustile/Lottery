@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖系统管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f6fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .prize-list {
+            list-style: none;
+        }
+
+        .prize-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .prize-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .prize-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .prize-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .prize-stat {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .prize-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .prize-stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 抽奖系统管理后台</h1>
+
+        <!-- 统计面板 -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDraws">0</div>
+                <div class="stat-label">总抽奖次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalPrizes">0</div>
+                <div class="stat-label">已发出奖项</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">参与用户数</div>
+            </div>
+        </div>
+
+        <!-- 奖项配置 -->
+        <div class="panel">
+            <h2>🏆 奖项配置</h2>
+            <div id="messageBox" class="message"></div>
+            
+            <ul class="prize-list" id="prizeList">
+                <!-- 奖项列表将由 JS 动态加载 -->
+            </ul>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="savePrizes()">💾 保存配置</button>
+                <button class="btn btn-danger" onclick="resetLottery()">⚠️ 重置抽奖系统</button>
+            </div>
+        </div>
+
+        <!-- 获奖名单 -->
+        <div class="panel">
+            <h2>📋 获奖名单</h2>
+            <table id="winnersTable">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>用户</th>
+                        <th>登录方式</th>
+                        <th>奖项</th>
+                        <th>抽奖时间</th>
+                    </tr>
+                </thead>
+                <tbody id="winnersList">
+                    <!-- 获奖名单将由 JS 动态加载 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let prizes = [];
+
+        // 加载数据
+        async function loadData() {
+            try {
+                const response = await fetch('/api/prizes');
+                const result = await response.json();
+                
+                if (result.success) {
+                    prizes = result.prizes;
+                    document.getElementById('totalDraws').textContent = result.total_draws;
+                    
+                    let totalPrizes = 0;
+                    prizes.forEach(p => totalPrizes += p.current_count);
+                    document.getElementById('totalPrizes').textContent = totalPrizes;
+                    
+                    renderPrizes();
+                    loadWinners();
+                }
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+
+        // 渲染奖项列表
+        function renderPrizes() {
+            const prizeList = document.getElementById('prizeList');
+            prizeList.innerHTML = '';
+
+            prizes.forEach((prize, index) => {
+                const percentage = ((prize.current_count / prize.max_count) * 100).toFixed(1);
+                
+                const li = document.createElement('li');
+                li.className = 'prize-item';
+                li.innerHTML = `
+                    <div class="prize-header">
+                        <div class="prize-name">${prize.name}</div>
+                        <button class="btn" style="padding: 8px 20px; font-size: 14px;" onclick="editPrize(${index})">✏️ 编辑</button>
+                    </div>
+                    <div class="prize-stats">
+                        <div class="prize-stat">
+                            <div class="prize-stat-value">${(prize.rate * 100).toFixed(1)}%</div>
+                            <div class="prize-stat-label">中奖率</div>
+                        </div>
+                        <div class="prize-stat">
+                            <div class="prize-stat-value">${prize.current_count}/${prize.max_count}</div>
+                            <div class="prize-stat-label">已中/上限</div>
+                        </div>
+                        <div class="prize-stat">
+                            <div class="prize-stat-value">${percentage}%</div>
+                            <div class="prize-stat-label">进度</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+                    </div>
+                `;
+                prizeList.appendChild(li);
+            });
+
+            document.getElementById('totalUsers').textContent = prizes.reduce((sum, p) => sum + p.current_count, 0);
+        }
+
+        // 编辑奖项
+        function editPrize(index) {
+            const prize = prizes[index];
+            const newName = prompt('奖项名称:', prize.name);
+            if (newName === null) return;
+            
+            const newRate = prompt('中奖率 (例如 0.01 表示 1%):', prize.rate);
+            if (newRate === null) return;
+            
+            const newMaxCount = prompt('人数上限:', prize.max_count);
+            if (newMaxCount === null) return;
+
+            prizes[index] = {
+                ...prize,
+                name: newName || prize.name,
+                rate: parseFloat(newRate) || prize.rate,
+                max_count: parseInt(newMaxCount) || prize.max_count
+            };
+
+            renderPrizes();
+        }
+
+        // 保存配置
+        async function savePrizes() {
+            try {
+                const response = await fetch('/api/prizes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prizes })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('配置已保存！', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showMessage('保存失败：' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 重置系统
+        async function resetLottery() {
+            if (!confirm('确定要重置抽奖系统吗？所有用户的抽奖记录将被清空！')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/reset', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('系统已重置！', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showMessage('重置失败：' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 加载获奖名单
+        async function loadWinners() {
+            // 这里可以从后端 API 获取获奖名单
+            // 暂时显示示例数据
+            const tbody = document.getElementById('winnersList');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">暂无获奖数据</td></tr>';
+        }
+
+        // 显示消息
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('messageBox');
+            messageEl.textContent = msg;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // 页面加载时初始化数据
+        loadData();
+
+        // 每 10 秒刷新一次数据
+        setInterval(loadData, 10000);
+    </script>
+</body>
+</html>
