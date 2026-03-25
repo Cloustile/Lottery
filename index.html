@@ -69,26 +69,6 @@
             border-color: #667eea;
         }
 
-        .login-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .login-tab.active {
-            border-bottom: 3px solid #667eea;
-            color: #667eea;
-            font-weight: bold;
-        }
-
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -164,22 +144,6 @@
             text-align: left;
         }
 
-        .captcha-send {
-            display: inline-block;
-            padding: 12px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 14px;
-        }
-
-        .captcha-send:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
@@ -188,44 +152,29 @@
 
         <!-- 登录表单 -->
         <div id="loginSection" class="login-form">
-            <div class="login-tabs">
-                <div class="login-tab active" onclick="switchLoginType('id_card')">身份证号</div>
-                <div class="login-tab" onclick="switchLoginType('phone')">手机验证</div>
+            <div class="form-group">
+                <label for="idCard">请输入身份证号（18 位）</label>
+                <input type="text" id="idCard" placeholder="请输入 18 位身份证号码" maxlength="18">
             </div>
-
-            <div id="idCardForm">
-                <div class="form-group">
-                    <label for="idCard">请输入身份证号（18 位）</label>
-                    <input type="text" id="idCard" placeholder="请输入 18 位身份证号码" maxlength="18">
-                </div>
-                <div class="form-group">
-                    <label for="name">姓名</label>
-                    <input type="text" id="name" placeholder="请输入您的姓名">
-                </div>
-                <button class="btn" onclick="login()">登录并抽奖</button>
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" id="name" placeholder="请输入您的姓名">
             </div>
-
-            <div id="phoneForm" class="hidden">
-                <div class="form-group">
-                    <label for="phone">请输入手机号</label>
-                    <input type="tel" id="phone" placeholder="请输入 11 位手机号码" maxlength="11">
-                </div>
-                <div class="form-group">
-                    <label for="captcha">验证码</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="captcha" placeholder="请输入验证码" style="flex: 1;">
-                        <button class="captcha-send" id="sendCaptcha" onclick="sendCaptcha()">获取验证码</button>
-                    </div>
-                    <small style="color: #999; display: block; margin-top: 5px;">测试验证码：123456</small>
-                </div>
-                <div class="form-group">
-                    <label for="namePhone">姓名</label>
-                    <input type="text" id="namePhone" placeholder="请输入您的姓名">
-                </div>
-                <button class="btn" onclick="loginWithPhone()">登录并抽奖</button>
-            </div>
+            <button class="btn" onclick="login()">登录并抽奖</button>
 
             <div id="loginMessage" class="message"></div>
+            
+            <!-- 测试用例提示 -->
+            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: left;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">📋 测试用例（可直接使用）：</h4>
+                <ul style="list-style: none; color: #666; font-size: 14px;">
+                    <li>✅ 张三，123456789012345678（中国身份证）</li>
+                    <li>✅ John Smith，A123456789（国际证件）</li>
+                    <li>✅ 李四，110105199001011234（中国身份证）</li>
+                    <li>✅ Maria Garcia，X987654321（国际证件）</li>
+                    <li>✅ 王五，310101198512121234（中国身份证）</li>
+                </ul>
+            </div>
         </div>
 
         <!-- 抽奖区域 -->
@@ -252,52 +201,6 @@
     </div>
 
     <script>
-        let currentLoginType = 'id_card';
-        let currentUser = null;
-
-        // 切换登录类型
-        function switchLoginType(type) {
-            currentLoginType = type;
-            document.querySelectorAll('.login-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            if (type === 'id_card') {
-                document.getElementById('idCardForm').classList.remove('hidden');
-                document.getElementById('phoneForm').classList.add('hidden');
-            } else {
-                document.getElementById('idCardForm').classList.add('hidden');
-                document.getElementById('phoneForm').classList.remove('hidden');
-            }
-        }
-
-        // 发送验证码（模拟）
-        function sendCaptcha() {
-            const phone = document.getElementById('phone').value;
-            if (!phone || phone.length !== 11) {
-                showMessage('请先输入正确的手机号', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('sendCaptcha');
-            btn.disabled = true;
-            let count = 60;
-            btn.textContent = `${count}秒后重发`;
-
-            const timer = setInterval(() => {
-                count--;
-                btn.textContent = `${count}秒后重发`;
-                if (count <= 0) {
-                    clearInterval(timer);
-                    btn.disabled = false;
-                    btn.textContent = '获取验证码';
-                }
-            }, 1000);
-
-            showMessage('验证码已发送（测试码：123456）', 'success');
-        }
-
         // 显示消息
         function showMessage(msg, type) {
             const messageEl = document.getElementById('loginMessage');
@@ -315,8 +218,8 @@
             const idCard = document.getElementById('idCard').value.trim();
             const name = document.getElementById('name').value.trim();
 
-            if (!idCard || idCard.length !== 18) {
-                showMessage('请输入正确的 18 位身份证号', 'error');
+            if (!idCard) {
+                showMessage('请输入证件号码', 'error');
                 return;
             }
 
@@ -330,7 +233,6 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type: 'id_card',
                         identifier: idCard,
                         name: name
                     })
@@ -339,52 +241,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showDrawSection(name, '身份证号', result.has_drawn, result.prize);
-                } else {
-                    showMessage(result.message, 'error');
-                }
-            } catch (error) {
-                showMessage('网络错误，请稍后再试', 'error');
-            }
-        }
-
-        // 手机号登录
-        async function loginWithPhone() {
-            const phone = document.getElementById('phone').value.trim();
-            const captcha = document.getElementById('captcha').value.trim();
-            const name = document.getElementById('namePhone').value.trim();
-
-            if (!phone || phone.length !== 11) {
-                showMessage('请输入正确的 11 位手机号', 'error');
-                return;
-            }
-
-            if (!captcha) {
-                showMessage('请输入验证码', 'error');
-                return;
-            }
-
-            if (!name) {
-                showMessage('请输入姓名', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'phone',
-                        identifier: phone,
-                        code: captcha,
-                        name: name
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    showDrawSection(name, '手机号', result.has_drawn, result.prize);
+                    showDrawSection(name, result.has_drawn, result.prize);
                 } else {
                     showMessage(result.message, 'error');
                 }
@@ -394,12 +251,12 @@
         }
 
         // 显示抽奖区域
-        function showDrawSection(name, loginType, hasDrawn, prize) {
+        function showDrawSection(name, hasDrawn, prize) {
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('drawSection').classList.remove('hidden');
             
             document.getElementById('userName').textContent = name;
-            document.getElementById('loginTypeText').textContent = loginType;
+            document.getElementById('loginTypeText').textContent = '证件登录';
 
             if (hasDrawn) {
                 document.getElementById('drawBtn').disabled = true;

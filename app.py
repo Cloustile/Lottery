@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 import hashlib
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 app.secret_key = 'lottery_secret_key_2026'  # 生产环境请修改为随机密钥
 CORS(app)
 
@@ -43,9 +43,10 @@ def init_data():
     save_data(data)
     return data
 
-# 验证身份证号（简化版）
+# 验证身份证号（简化版，去掉长度限制以支持国际证件）
 def validate_id_card(id_card):
-    if len(id_card) == 18:
+    # 只要求非空即可
+    if id_card and len(id_card) > 0:
         return True
     return False
 
@@ -67,29 +68,16 @@ def admin():
 def login():
     data = load_data()
     req_data = request.json
-    login_type = req_data.get('type')  # 'id_card' or 'phone'
     identifier = req_data.get('identifier')
     
-    # 验证格式
-    if login_type == 'id_card':
-        if not validate_id_card(identifier):
-            return jsonify({'success': False, 'message': '身份证号格式不正确'})
-    elif login_type == 'phone':
-        if not validate_phone(identifier):
-            return jsonify({'success': False, 'message': '手机号格式不正确'})
-        # 这里可以添加短信验证码功能
-        code = req_data.get('code')
-        if not code:
-            return jsonify({'success': False, 'message': '请输入验证码'})
-        # 简化处理：验证码固定为 123456（生产环境需要对接短信服务）
-        if code != '123456':
-            return jsonify({'success': False, 'message': '验证码错误'})
+    # 验证证件号码格式（简化验证，只要求非空）
+    if not identifier or len(identifier) == 0:
+        return jsonify({'success': False, 'message': '请输入证件号码'})
     
     # 检查用户是否已存在
     if identifier not in data['users']:
         data['users'][identifier] = {
             'name': req_data.get('name', '用户'),
-            'login_type': login_type,
             'has_drawn': False,
             'prize': None,
             'draw_time': None
@@ -160,10 +148,17 @@ def draw():
 @app.route('/api/prizes', methods=['GET'])
 def get_prizes():
     data = load_data()
+    
+    # 计算统计数据
+    total_users = len(data['users'])  # 总用户数
+    participated_users = sum(1 for user in data['users'].values() if user.get('has_drawn'))  # 已参与用户数
+    
     return jsonify({
         'success': True,
         'prizes': data['prizes'],
-        'total_draws': data['total_draws']
+        'total_draws': data['total_draws'],
+        'total_users': total_users,
+        'participated_users': participated_users
     })
 
 @app.route('/api/prizes', methods=['POST'])
@@ -180,6 +175,30 @@ def update_prizes():
     
     save_data(data)
     return jsonify({'success': True, 'message': '奖项配置已更新'})
+
+@app.route('/api/winners', methods=['GET'])
+def get_winners():
+    data = load_data()
+    
+    # 获取所有已抽奖的用户
+    winners = []
+    for user_id, user_info in data['users'].items():
+        if user_info['has_drawn'] and user_info['prize']:
+            winners.append({
+                'identifier': user_id,
+                'name': user_info['name'],
+                'prize': user_info['prize'],
+                'draw_time': user_info['draw_time']
+            })
+    
+    # 按抽奖时间正序排序（最早的在前）
+    winners.sort(key=lambda x: x['draw_time'])
+    
+    return jsonify({
+        'success': True,
+        'winners': winners,
+        'total': len(winners)
+    })
 
 @app.route('/api/reset', methods=['POST'])
 def reset_lottery():

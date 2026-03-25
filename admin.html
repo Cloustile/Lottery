@@ -70,6 +70,36 @@
             padding-bottom: 10px;
         }
 
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-box-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-box-label {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
         .prize-list {
             list-style: none;
         }
@@ -119,6 +149,59 @@
             font-size: 12px;
             color: #7f8c8d;
             margin-top: 5px;
+        }
+
+        .edit-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .edit-section.active {
+            display: block;
+        }
+
+        .edit-form-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .edit-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .edit-form-group label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .edit-form-group input {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .edit-form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 14px;
         }
 
         .btn {
@@ -252,14 +335,22 @@
             </div>
         </div>
 
+        <!-- 各奖项详细统计 -->
+        <div class="panel">
+            <h2>📊 奖项统计详情</h2>
+            <div class="stats-row" id="prizeStatsRow">
+                <!-- 各奖项统计将由 JS 动态加载 -->
+            </div>
+        </div>
+
         <!-- 奖项配置 -->
         <div class="panel">
             <h2>🏆 奖项配置</h2>
             <div id="messageBox" class="message"></div>
             
-            <ul class="prize-list" id="prizeList">
+            <div id="prizeContainer">
                 <!-- 奖项列表将由 JS 动态加载 -->
-            </ul>
+            </div>
 
             <div class="action-buttons">
                 <button class="btn btn-success" onclick="savePrizes()">💾 保存配置</button>
@@ -275,7 +366,7 @@
                     <tr>
                         <th>序号</th>
                         <th>用户</th>
-                        <th>登录方式</th>
+                        <th>身份证号</th>
                         <th>奖项</th>
                         <th>抽奖时间</th>
                     </tr>
@@ -289,20 +380,34 @@
 
     <script>
         let prizes = [];
+        let totalDraws = 0;
+        let refreshTimer = null;
+        let isEditingMode = false;
 
         // 加载数据
         async function loadData() {
+            // 如果正在编辑，跳过本次刷新
+            if (isEditingMode) {
+                return;
+            }
+            
             try {
                 const response = await fetch('/api/prizes');
                 const result = await response.json();
                 
                 if (result.success) {
                     prizes = result.prizes;
-                    document.getElementById('totalDraws').textContent = result.total_draws;
+                    totalDraws = result.total_draws;
                     
-                    let totalPrizes = 0;
-                    prizes.forEach(p => totalPrizes += p.current_count);
-                    document.getElementById('totalPrizes').textContent = totalPrizes;
+                    // 更新顶部仪表盘统计
+                    document.getElementById('totalDraws').textContent = totalDraws;
+                    let totalPrizesCount = 0;
+                    prizes.forEach(p => totalPrizesCount += p.current_count);
+                    document.getElementById('totalPrizes').textContent = totalPrizesCount;
+                    document.getElementById('totalUsers').textContent = totalPrizesCount;
+                    
+                    // 更新各奖项详细统计
+                    renderPrizeStats();
                     
                     renderPrizes();
                     loadWinners();
@@ -312,80 +417,174 @@
             }
         }
 
-        // 渲染奖项列表
-        function renderPrizes() {
-            const prizeList = document.getElementById('prizeList');
-            prizeList.innerHTML = '';
+        // 渲染各奖项详细统计
+        function renderPrizeStats() {
+            const container = document.getElementById('prizeStatsRow');
+            container.innerHTML = '';
 
-            prizes.forEach((prize, index) => {
-                const percentage = ((prize.current_count / prize.max_count) * 100).toFixed(1);
-                
-                const li = document.createElement('li');
-                li.className = 'prize-item';
-                li.innerHTML = `
-                    <div class="prize-header">
-                        <div class="prize-name">${prize.name}</div>
-                        <button class="btn" style="padding: 8px 20px; font-size: 14px;" onclick="editPrize(${index})">✏️ 编辑</button>
+            prizes.forEach(prize => {
+                const percentage = prize.max_count > 0 ? ((prize.current_count / prize.max_count) * 100).toFixed(1) : 0;
+                const prizeDiv = document.createElement('div');
+                prizeDiv.className = 'stat-box';
+                prizeDiv.innerHTML = `
+                    <div class="stat-box-value" style="font-size: 20px; color: #2c3e50;">${prize.name}</div>
+                    <div style="margin: 15px 0;">
+                        <div class="stat-box-value" style="color: #667eea;">${prize.current_count}/${prize.max_count}</div>
+                        <div class="stat-box-label">已抽/总数</div>
                     </div>
-                    <div class="prize-stats">
-                        <div class="prize-stat">
-                            <div class="prize-stat-value">${(prize.rate * 100).toFixed(1)}%</div>
-                            <div class="prize-stat-label">中奖率</div>
-                        </div>
-                        <div class="prize-stat">
-                            <div class="prize-stat-value">${prize.current_count}/${prize.max_count}</div>
-                            <div class="prize-stat-label">已中/上限</div>
-                        </div>
-                        <div class="prize-stat">
-                            <div class="prize-stat-value">${percentage}%</div>
-                            <div class="prize-stat-label">进度</div>
-                        </div>
+                    <div style="margin: 10px 0;">
+                        <div class="stat-box-value" style="font-size: 18px;">${percentage}%</div>
+                        <div class="stat-box-label">抽取百分比</div>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <div class="stat-box-value" style="font-size: 18px;">${(prize.rate * 100).toFixed(1)}%</div>
+                        <div class="stat-box-label">中奖概率</div>
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
                     </div>
                 `;
-                prizeList.appendChild(li);
+                container.appendChild(prizeDiv);
             });
-
-            document.getElementById('totalUsers').textContent = prizes.reduce((sum, p) => sum + p.current_count, 0);
         }
 
-        // 编辑奖项
-        function editPrize(index) {
-            const prize = prizes[index];
-            const newName = prompt('奖项名称:', prize.name);
-            if (newName === null) return;
-            
-            const newRate = prompt('中奖率 (例如 0.01 表示 1%):', prize.rate);
-            if (newRate === null) return;
-            
-            const newMaxCount = prompt('人数上限:', prize.max_count);
-            if (newMaxCount === null) return;
+        // 渲染奖项列表
+        function renderPrizes() {
+            const container = document.getElementById('prizeContainer');
+            container.innerHTML = '';
 
-            prizes[index] = {
-                ...prize,
-                name: newName || prize.name,
-                rate: parseFloat(newRate) || prize.rate,
-                max_count: parseInt(newMaxCount) || prize.max_count
-            };
+            prizes.forEach((prize, index) => {
+                const percentage = ((prize.current_count / prize.max_count) * 100).toFixed(1);
+                const isEditing = prize.isEditing || false;
+                
+                const prizeDiv = document.createElement('div');
+                prizeDiv.className = 'panel';
+                prizeDiv.style.marginBottom = '20px';
+                prizeDiv.innerHTML = `
+                    <div class="prize-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #2c3e50; margin: 0;">${prize.name}</h3>
+                        <button class="btn btn-sm" onclick="toggleEdit(${index})">${isEditing ? '✖️ 取消编辑' : '✏️ 编辑'}</button>
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-box-value">${prize.current_count}</div>
+                            <div class="stat-box-label">已抽奖次数</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value">${prize.max_count}</div>
+                            <div class="stat-box-label">奖项总数</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value">${percentage}%</div>
+                            <div class="stat-box-label">已抽奖百分比</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value">${(prize.rate * 100).toFixed(1)}%</div>
+                            <div class="stat-box-label">中奖概率</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+                    </div>
+                    
+                    <div class="edit-section ${isEditing ? 'active' : ''}" id="editSection-${index}">
+                        <div class="edit-form-row">
+                            <div class="edit-form-group">
+                                <label>奖项名称</label>
+                                <input type="text" id="editName-${index}" value="${prize.name}">
+                            </div>
+                            <div class="edit-form-group">
+                                <label>奖项总数</label>
+                                <input type="number" id="editMaxCount-${index}" value="${prize.max_count}">
+                            </div>
+                            <div class="edit-form-group">
+                                <label>中奖概率 (%)</label>
+                                <input type="number" step="0.1" id="editRate-${index}" value="${(prize.rate * 100).toFixed(1)}">
+                            </div>
+                        </div>
+                        <div class="edit-actions">
+                            <button class="btn btn-sm btn-success" onclick="savePrizeEdit(${index})">💾 保存此奖项</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(prizeDiv);
+            });
+        }
 
+        // 切换编辑模式
+        function toggleEdit(index) {
+            isEditingMode = !prizes[index].isEditing;
+            prizes[index].isEditing = isEditingMode;
             renderPrizes();
         }
 
-        // 保存配置
-        async function savePrizes() {
+        // 保存单个奖项的编辑
+        async function savePrizeEdit(index) {
+            const nameInput = document.getElementById(`editName-${index}`);
+            const maxCountInput = document.getElementById(`editMaxCount-${index}`);
+            const rateInput = document.getElementById(`editRate-${index}`);
+            
+            prizes[index].name = nameInput.value.trim() || prizes[index].name;
+            prizes[index].max_count = parseInt(maxCountInput.value) || prizes[index].max_count;
+            prizes[index].rate = parseFloat(rateInput.value) / 100 || prizes[index].rate;
+            prizes[index].isEditing = false;
+            isEditingMode = false;
+            
+            renderPrizes();
+            
+            // 立即保存到服务器
             try {
+                const prizesToSave = prizes.map(p => ({
+                    name: p.name,
+                    rate: p.rate,
+                    max_count: p.max_count,
+                    current_count: p.current_count
+                }));
+
                 const response = await fetch('/api/prizes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prizes })
+                    body: JSON.stringify({ prizes: prizesToSave })
                 });
 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage('配置已保存！', 'success');
+                    showMessage(`"${prizes[index].name}" 配置已更新并保存`, 'success');
+                } else {
+                    showMessage('保存失败：' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 保存配置
+        async function savePrizes() {
+            try {
+                // 退出编辑模式
+                isEditingMode = false;
+                
+                // 清理编辑状态字段
+                const prizesToSave = prizes.map(p => ({
+                    name: p.name,
+                    rate: p.rate,
+                    max_count: p.max_count,
+                    current_count: p.current_count
+                }));
+
+                const response = await fetch('/api/prizes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prizes: prizesToSave })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('所有配置已保存！', 'success');
                     setTimeout(() => location.reload(), 1500);
                 } else {
                     showMessage('保存失败：' + result.message, 'error');
@@ -421,10 +620,38 @@
 
         // 加载获奖名单
         async function loadWinners() {
-            // 这里可以从后端 API 获取获奖名单
-            // 暂时显示示例数据
-            const tbody = document.getElementById('winnersList');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">暂无获奖数据</td></tr>';
+            try {
+                const response = await fetch('/api/winners');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const tbody = document.getElementById('winnersList');
+                    
+                    if (result.winners.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">暂无获奖数据</td></tr>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    result.winners.forEach((winner, index) => {
+                        html += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${winner.name}</td>
+                                <td>${winner.identifier}</td>
+                                <td>${winner.prize}</td>
+                                <td>${winner.draw_time || '-'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tbody.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('加载获奖名单失败:', error);
+                const tbody = document.getElementById('winnersList');
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #f00;">加载失败</td></tr>';
+            }
         }
 
         // 显示消息
@@ -442,8 +669,8 @@
         // 页面加载时初始化数据
         loadData();
 
-        // 每 10 秒刷新一次数据
-        setInterval(loadData, 10000);
+        // 每 5 秒刷新一次数据，实现实时更新
+        setInterval(loadData, 5000);
     </script>
 </body>
 </html>

@@ -1,10 +1,41 @@
 {
-  "users": {},
+  "users": {
+    "123456789012345678": {
+      "name": "张三",
+      "has_drawn": true,
+      "prize": "三等奖",
+      "draw_time": "2026-03-25 17:40:00"
+    },
+    "A123456789": {
+      "name": "John Smith",
+      "has_drawn": true,
+      "prize": "三等奖",
+      "draw_time": "2026-03-25 18:55:03"
+    },
+    "110105199001011234": {
+      "name": "李四",
+      "has_drawn": true,
+      "prize": "参与奖",
+      "draw_time": "2026-03-25 19:16:39"
+    },
+    "X987654321": {
+      "name": "Maria Garcia",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101198512121234": {
+      "name": "王五",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    }
+  },
   "prizes": [
     {
       "name": "一等奖",
-      "rate": 0.01,
-      "max_count": 10,
+      "rate": 0.03,
+      "max_count": 30,
       "current_count": 0
     },
     {
@@ -17,14 +48,14 @@
       "name": "三等奖",
       "rate": 0.1,
       "max_count": 100,
-      "current_count": 0
+      "current_count": 2
     },
     {
       "name": "参与奖",
       "rate": 0.84,
       "max_count": 1000,
-      "current_count": 0
+      "current_count": 1
     }
   ],
-  "total_draws": 0
+  "total_draws": 3
 }
