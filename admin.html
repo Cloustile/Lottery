@@ -322,16 +322,12 @@
         <!-- 统计面板 -->
         <div class="dashboard">
             <div class="stat-card">
-                <div class="stat-number" id="totalDraws">0</div>
-                <div class="stat-label">总抽奖次数</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalPrizes">0</div>
-                <div class="stat-label">已发出奖项</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-number" id="totalUsers">0</div>
-                <div class="stat-label">参与用户数</div>
+                <div class="stat-label">总用户数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="participatedUsers">0</div>
+                <div class="stat-label">已参与用户数</div>
             </div>
         </div>
 
@@ -353,7 +349,6 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-success" onclick="savePrizes()">💾 保存配置</button>
                 <button class="btn btn-danger" onclick="resetLottery()">⚠️ 重置抽奖系统</button>
             </div>
         </div>
@@ -400,11 +395,8 @@
                     totalDraws = result.total_draws;
                     
                     // 更新顶部仪表盘统计
-                    document.getElementById('totalDraws').textContent = totalDraws;
-                    let totalPrizesCount = 0;
-                    prizes.forEach(p => totalPrizesCount += p.current_count);
-                    document.getElementById('totalPrizes').textContent = totalPrizesCount;
-                    document.getElementById('totalUsers').textContent = totalPrizesCount;
+                    document.getElementById('totalUsers').textContent = result.total_users;
+                    document.getElementById('participatedUsers').textContent = result.participated_users;
                     
                     // 更新各奖项详细统计
                     renderPrizeStats();
@@ -553,39 +545,6 @@
                 
                 if (result.success) {
                     showMessage(`"${prizes[index].name}" 配置已更新并保存`, 'success');
-                } else {
-                    showMessage('保存失败：' + result.message, 'error');
-                }
-            } catch (error) {
-                showMessage('网络错误，请稍后再试', 'error');
-            }
-        }
-
-        // 保存配置
-        async function savePrizes() {
-            try {
-                // 退出编辑模式
-                isEditingMode = false;
-                
-                // 清理编辑状态字段
-                const prizesToSave = prizes.map(p => ({
-                    name: p.name,
-                    rate: p.rate,
-                    max_count: p.max_count,
-                    current_count: p.current_count
-                }));
-
-                const response = await fetch('/api/prizes', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prizes: prizesToSave })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('所有配置已保存！', 'success');
-                    setTimeout(() => location.reload(), 1500);
                 } else {
                     showMessage('保存失败：' + result.message, 'error');
                 }
