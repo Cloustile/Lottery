@@ -228,6 +228,39 @@
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
         }
 
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
         .input-group {
             margin-bottom: 15px;
         }
@@ -337,6 +370,53 @@
             <div class="stats-row" id="prizeStatsRow">
                 <!-- 各奖项统计将由 JS 动态加载 -->
             </div>
+        </div>
+
+        <!-- 用户管理 -->
+        <div class="panel">
+            <h2>👥 用户管理</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-sm btn-success" onclick="showImportModal()">➕ 批量导入用户</button>
+                <button class="btn btn-sm" onclick="loadUsers()">🔄 刷新用户列表</button>
+            </div>
+
+            <!-- 用户导入模态框 -->
+            <div id="importModal" class="modal hidden">
+                <div class="modal-content">
+                    <h3 style="margin-bottom: 15px;">📥 批量导入用户</h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                        请按以下格式输入用户数据（每行一个用户，用逗号分隔）：<br>
+                        <strong>身份证号/手机号，姓名</strong>
+                    </p>
+                    <textarea id="importData" rows="10" placeholder="示例：
+123456789012345678，张三
+A123456789,John Smith
+110105199001011234，李四" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px;"></textarea>
+                    
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn btn-sm btn-primary" onclick="confirmImport()">✅ 确认导入</button>
+                        <button class="btn btn-sm" onclick="closeImportModal()">❌ 取消</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户列表表格 -->
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>证件号码</th>
+                        <th>姓名</th>
+                        <th>状态</th>
+                        <th>奖项</th>
+                        <th>抽奖时间</th>
+                    </tr>
+                </thead>
+                <tbody id="usersList">
+                    <!-- 用户列表将由 JS 动态加载 -->
+                </tbody>
+            </table>
         </div>
 
         <!-- 奖项配置 -->
@@ -626,6 +706,110 @@
             setTimeout(() => {
                 messageEl.style.display = 'none';
             }, 3000);
+        }
+
+        // ==================== 用户管理功能 ====================
+
+        // 显示导入模态框
+        function showImportModal() {
+            document.getElementById('importModal').classList.remove('hidden');
+        }
+
+        // 关闭导入模态框
+        function closeImportModal() {
+            document.getElementById('importModal').classList.add('hidden');
+            document.getElementById('importData').value = '';
+        }
+
+        // 确认导入用户
+        async function confirmImport() {
+            const importData = document.getElementById('importData').value.trim();
+            
+            if (!importData) {
+                alert('请输入用户数据');
+                return;
+            }
+
+            // 解析用户数据
+            const users = [];
+            const lines = importData.split('\n');
+            
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+                
+                // 支持中英文逗号分隔
+                const parts = line.split(/[,,]/);
+                if (parts.length >= 2) {
+                    const identifier = parts[0].trim();
+                    const name = parts.slice(1).join(',').trim(); // 姓名中可能包含逗号
+                    users.push({ identifier, name });
+                }
+            }
+
+            if (users.length === 0) {
+                alert('未找到有效的用户数据，请检查格式');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/import', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ users })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    closeImportModal();
+                    loadUsers(); // 刷新用户列表
+                    loadData(); // 刷新统计数据
+                } else {
+                    showMessage('导入失败：' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 加载用户列表
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const tbody = document.getElementById('usersList');
+                    
+                    if (result.users.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">暂无用户数据</td></tr>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    result.users.forEach((user, index) => {
+                        const statusText = user.has_drawn ? '<span style="color: #38ef7d;">✅ 已抽奖</span>' : '<span style="color: #999;">⏳ 未抽奖</span>';
+                        html += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${user.identifier}</td>
+                                <td>${user.name}</td>
+                                <td>${statusText}</td>
+                                <td>${user.prize || '-'}</td>
+                                <td>${user.draw_time || '-'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tbody.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('加载用户列表失败:', error);
+                const tbody = document.getElementById('usersList');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #f00;">加载失败</td></tr>';
+            }
         }
 
         // 页面加载时初始化数据

@@ -76,13 +76,10 @@ def login():
     
     # 检查用户是否已存在
     if identifier not in data['users']:
-        data['users'][identifier] = {
-            'name': req_data.get('name', '用户'),
-            'has_drawn': False,
-            'prize': None,
-            'draw_time': None
-        }
-        save_data(data)
+        return jsonify({
+            'success': False, 
+            'message': '信息不匹配，该用户不存在'
+        })
     
     session['user_id'] = identifier
     return jsonify({
@@ -217,6 +214,82 @@ def reset_lottery():
     save_data(data)
     
     return jsonify({'success': True, 'message': '抽奖系统已重置'})
+
+@app.route('/api/users/import', methods=['POST'])
+def import_users():
+    """批量导入用户"""
+    data = load_data()
+    req_data = request.json
+    users_data = req_data.get('users', [])
+    
+    if not users_data:
+        return jsonify({'success': False, 'message': '请提供用户数据'})
+    
+    success_count = 0
+    skip_count = 0
+    error_list = []
+    
+    for user_info in users_data:
+        identifier = user_info.get('identifier', '').strip()
+        name = user_info.get('name', '').strip()
+        
+        # 验证必填字段
+        if not identifier or not name:
+            error_list.append(f"跳过无效数据：{user_info}")
+            continue
+        
+        # 检查是否已存在
+        if identifier in data['users']:
+            skip_count += 1
+            continue
+        
+        # 添加新用户
+        data['users'][identifier] = {
+            'name': name,
+            'has_drawn': False,
+            'prize': None,
+            'draw_time': None
+        }
+        success_count += 1
+    
+    save_data(data)
+    
+    message = f"成功导入 {success_count} 个用户"
+    if skip_count > 0:
+        message += f"，跳过 {skip_count} 个已存在的用户"
+    if error_list:
+        message += f"，{len(error_list)} 个错误"
+    
+    return jsonify({
+        'success': True,
+        'message': message,
+        'success_count': success_count,
+        'skip_count': skip_count
+    })
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    """获取所有用户列表"""
+    data = load_data()
+    
+    users_list = []
+    for user_id, user_info in data['users'].items():
+        users_list.append({
+            'identifier': user_id,
+            'name': user_info['name'],
+            'has_drawn': user_info.get('has_drawn', False),
+            'prize': user_info.get('prize'),
+            'draw_time': user_info.get('draw_time')
+        })
+    
+    # 按姓名排序
+    users_list.sort(key=lambda x: x['name'])
+    
+    return jsonify({
+        'success': True,
+        'users': users_list,
+        'total': len(users_list)
+    })
 
 if __name__ == '__main__':
     init_data()
