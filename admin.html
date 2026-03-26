@@ -391,9 +391,21 @@
         <div class="panel">
             <h2>👥 用户管理</h2>
             
-            <div style="margin-bottom: 20px;">
-                <button class="btn btn-sm btn-success" onclick="showImportModal()">➕ 批量导入用户</button>
-                <button class="btn btn-sm" onclick="loadUsers()">🔄 刷新用户列表</button>
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-sm btn-success" onclick="showImportModal()">➕ 批量导入用户</button>
+                    <button class="btn btn-sm" onclick="loadUsers()">🔄 刷新用户列表</button>
+                    <button class="btn btn-sm" id="toggleListBtn" onclick="toggleUserList()">👁️ 隐藏列表</button>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="searchInput" placeholder="搜索姓名或证件号..." 
+                           style="padding: 8px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; width: 300px;"
+                           onkeyup="handleSearch(event)">
+                    <button class="btn btn-sm btn-primary" onclick="searchUsers()">🔍 搜索</button>
+                    <button class="btn btn-sm" onclick="clearSearch()">❌ 清除</button>
+                </div>
             </div>
 
             <!-- 用户导入模态框 -->
@@ -417,22 +429,31 @@ A123456789,John Smith
             </div>
 
             <!-- 用户列表表格 -->
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>证件号码</th>
-                        <th>姓名</th>
-                        <th>状态</th>
-                        <th>奖项</th>
-                        <th>抽奖时间</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody id="usersList">
-                    <!-- 用户列表将由 JS 动态加载 -->
-                </tbody>
-            </table>
+            <div id="usersTableContainer">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>证件号码</th>
+                            <th>姓名</th>
+                            <th>状态</th>
+                            <th>奖项</th>
+                            <th>抽奖时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersList">
+                        <!-- 用户列表将由 JS 动态加载 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 空状态提示 -->
+            <div id="emptyState" class="hidden" style="text-align: center; padding: 50px; color: #999;">
+                <div style="font-size: 64px; margin-bottom: 20px;">📭</div>
+                <div style="font-size: 18px; margin-bottom: 10px;">暂无用户数据</div>
+                <div style="font-size: 14px;">点击"批量导入用户"添加数据</div>
+            </div>
         </div>
 
         <!-- 奖项配置 -->
@@ -801,48 +822,6 @@ A123456789,John Smith
             }
         }
 
-        // 加载用户列表
-        async function loadUsers() {
-            try {
-                const response = await fetch('/api/users');
-                const result = await response.json();
-                
-                if (result.success) {
-                    const tbody = document.getElementById('usersList');
-                    
-                    if (result.users.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">暂无用户数据</td></tr>';
-                        return;
-                    }
-                    
-                    let html = '';
-                    result.users.forEach((user, index) => {
-                        const statusText = user.has_drawn ? '<span style="color: #38ef7d;">✅ 已抽奖</span>' : '<span style="color: #999;">⏳ 未抽奖</span>';
-                        const deleteBtn = user.has_drawn 
-                            ? `<button class="btn btn-sm btn-danger" disabled title="已抽奖用户不能删除">🗑️ 删除</button>`
-                            : `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.identifier}')" ${user.has_drawn ? 'disabled' : ''}>🗑️ 删除</button>`;
-                        html += `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${user.identifier}</td>
-                                <td>${user.name}</td>
-                                <td>${statusText}</td>
-                                <td>${user.prize || '-'}</td>
-                                <td>${user.draw_time || '-'}</td>
-                                <td>${deleteBtn}</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    tbody.innerHTML = html;
-                }
-            } catch (error) {
-                console.error('加载用户列表失败:', error);
-                const tbody = document.getElementById('usersList');
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #f00;">加载失败</td></tr>';
-            }
-        }
-
         // 删除用户
         async function deleteUser(identifier) {
             if (!confirm(`确定要删除用户 ${identifier} 吗？\n此操作不可恢复！`)) {
@@ -867,6 +846,116 @@ A123456789,John Smith
                 }
             } catch (error) {
                 showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // ==================== 搜索和显示控制功能 ====================
+
+        // 存储所有用户数据（用于搜索）
+        let allUsersData = [];
+
+        // 切换用户列表显示/隐藏
+        function toggleUserList() {
+            const container = document.getElementById('usersTableContainer');
+            const btn = document.getElementById('toggleListBtn');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                btn.textContent = '👁️ 隐藏列表';
+                btn.className = 'btn btn-sm';
+            } else {
+                container.classList.add('hidden');
+                btn.textContent = '👁️ 显示列表';
+                btn.className = 'btn btn-sm btn-primary';
+            }
+        }
+
+        // 处理搜索回车事件
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                searchUsers();
+            }
+        }
+
+        // 搜索用户
+        function searchUsers() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                renderUsers(allUsersData);
+                return;
+            }
+            
+            // 根据姓名或证件号搜索
+            const filteredUsers = allUsersData.filter(user => 
+                user.name.toLowerCase().includes(searchTerm) ||
+                user.identifier.toLowerCase().includes(searchTerm)
+            );
+            
+            renderUsers(filteredUsers);
+        }
+
+        // 清除搜索
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderUsers(allUsersData);
+        }
+
+        // 渲染用户列表
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersList');
+            const container = document.getElementById('usersTableContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (!users || users.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            let html = '';
+            users.forEach((user, index) => {
+                const statusText = user.has_drawn ? '<span style="color: #38ef7d;">✅ 已抽奖</span>' : '<span style="color: #999;">⏳ 未抽奖</span>';
+                const deleteBtn = user.has_drawn 
+                    ? `<button class="btn btn-sm btn-danger" disabled title="已抽奖用户不能删除">🗑️ 删除</button>`
+                    : `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.identifier}')">🗑️ 删除</button>`;
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.identifier}</td>
+                        <td>${user.name}</td>
+                        <td>${statusText}</td>
+                        <td>${user.prize || '-'}</td>
+                        <td>${user.draw_time || '-'}</td>
+                        <td>${deleteBtn}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // 加载用户列表（修改原有函数）
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 保存所有用户数据到全局变量
+                    allUsersData = result.users;
+                    
+                    // 使用新的渲染函数
+                    renderUsers(allUsersData);
+                }
+            } catch (error) {
+                console.error('加载用户列表失败:', error);
+                const tbody = document.getElementById('usersList');
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #f00;">加载失败</td></tr>';
             }
         }
 
