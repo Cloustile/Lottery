@@ -363,6 +363,21 @@
                 <div class="stat-label">已参与用户数</div>
             </div>
         </div>
+        
+        <!-- 参与率进度条 -->
+        <div class="panel" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #7f8c8d; font-size: 14px;">总体参与率</span>
+                <span id="participationRateText" style="color: #667eea; font-weight: bold; font-size: 14px;">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="participationProgress" style="width: 0%; background: linear-gradient(90deg, #11998e, #38ef7d);"></div>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: #95a5a6;">
+                <span>未参与：<span id="notParticipatedCount">0</span>人</span>
+                <span>已参与：<span id="participatedCount">0</span>人</span>
+            </div>
+        </div>
 
         <!-- 各奖项详细统计 -->
         <div class="panel">
@@ -478,6 +493,17 @@ A123456789,John Smith
                     // 更新顶部仪表盘统计
                     document.getElementById('totalUsers').textContent = result.total_users;
                     document.getElementById('participatedUsers').textContent = result.participated_users;
+                    
+                    // 计算并更新参与率进度条
+                    const participationRate = result.total_users > 0 
+                        ? (result.participated_users / result.total_users * 100).toFixed(1) 
+                        : 0;
+                    const notParticipated = result.total_users - result.participated_users;
+                    
+                    document.getElementById('participationProgress').style.width = `${participationRate}%`;
+                    document.getElementById('participationRateText').textContent = `${participationRate}%`;
+                    document.getElementById('participatedCount').textContent = result.participated_users;
+                    document.getElementById('notParticipatedCount').textContent = notParticipated;
                     
                     // 更新各奖项详细统计
                     renderPrizeStats();
