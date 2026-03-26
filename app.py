@@ -106,26 +106,46 @@ def draw():
     
     # 执行抽奖
     prizes = data['prizes']
-    total_rate = sum(p['rate'] for p in prizes)
     
     # 检查是否还有名额
     available_prizes = [p for p in prizes if p['current_count'] < p['max_count']]
     if not available_prizes:
         return jsonify({'success': False, 'message': '所有奖项已抽完'})
     
-    # 根据概率抽取
-    rand = random.random() * total_rate
-    cumulative = 0
+    # 智能抽奖逻辑：如果随机到的奖项已抽完，则自动重抽
     won_prize = None
+    max_attempts = 100  # 最多尝试 100 次，防止死循环
     
-    for prize in available_prizes:
-        cumulative += prize['rate']
-        if rand <= cumulative and prize['current_count'] < prize['max_count']:
-            won_prize = prize
+    for attempt in range(max_attempts):
+        # 计算当前可用奖项的总概率
+        total_rate = sum(p['rate'] for p in available_prizes)
+        
+        if total_rate == 0:
+            # 如果所有可用奖项概率都为 0，则平均分配
+            won_prize = available_prizes[attempt % len(available_prizes)]
             break
+        
+        # 根据概率抽取
+        rand = random.random() * total_rate
+        cumulative = 0
+        
+        for prize in available_prizes:
+            cumulative += prize['rate']
+            if rand <= cumulative:
+                # 检查该奖项是否还有名额
+                if prize['current_count'] < prize['max_count']:
+                    won_prize = prize
+                    break
+        
+        # 如果成功分配到奖项，退出循环
+        if won_prize:
+            break
+        
+        # 如果没有分配到奖项（理论上不应该发生），继续下一次尝试
     
-    if not won_prize:
-        won_prize = available_prizes[-1]  # 默认给最后一个奖项
+    # 如果多次尝试后仍未分配，强制分配一个可用奖项
+    if not won_prize and available_prizes:
+        won_prize = available_prizes[-1]
     
     # 更新用户状态
     user['has_drawn'] = True
