@@ -136,14 +136,6 @@
             display: none;
         }
 
-        .user-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
     </style>
 </head>
 <body>
@@ -181,26 +173,14 @@
             </div>
         </div>
 
-        <!-- 抽奖区域 -->
-        <div id="drawSection" class="draw-section hidden">
-            <div class="user-info">
-                <p><strong>用户：</strong><span id="userName"></span></p>
-                <p><strong>登录方式：</strong><span id="loginTypeText"></span></p>
+        <!-- 抽奖结果区域 -->
+        <div id="drawResult" class="result-section hidden">
+            <div class="prize-display">
+                <div class="prize-name" id="prizeName">???</div>
             </div>
-
-            <button class="btn" id="drawBtn" onclick="startDraw()">开始抽奖</button>
-
-            <div id="drawResult" class="result-section hidden">
-                <div class="prize-display">
-                    <div class="prize-name" id="prizeName">???</div>
-                </div>
-                <p id="congratulations" style="font-size: 20px; color: #333; margin-top: 20px;"></p>
-            </div>
-
-            <div id="alreadyDrawn" class="message success hidden">
-                <p>您已经抽过奖了！</p>
-                <p id="previousPrize" style="margin-top: 10px; font-weight: bold;"></p>
-            </div>
+            <p id="congratulations" style="font-size: 20px; color: #333; margin-top: 20px;"></p>
+            
+            <button class="btn" onclick="location.reload()" style="margin-top: 20px;">🔄 返回重新登录</button>
         </div>
     </div>
 
@@ -217,7 +197,7 @@
             }, 3000);
         }
 
-        // 身份证号登录
+        // 身份证号登录并直接抽奖
         async function login() {
             const idCard = document.getElementById('idCard').value.trim();
             const name = document.getElementById('name').value.trim();
@@ -233,7 +213,8 @@
             }
 
             try {
-                const response = await fetch('/api/login', {
+                // 先登录
+                const loginResponse = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -242,63 +223,43 @@
                     })
                 });
 
-                const result = await response.json();
+                const loginResult = await loginResponse.json();
                 
-                if (result.success) {
-                    showDrawSection(name, result.has_drawn, result.prize);
-                } else {
-                    showMessage(result.message, 'error');
+                if (!loginResult.success) {
+                    showMessage(loginResult.message, 'error');
+                    return;
                 }
-            } catch (error) {
-                showMessage('网络错误，请稍后再试', 'error');
-            }
-        }
-
-        // 显示抽奖区域
-        function showDrawSection(name, hasDrawn, prize) {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('drawSection').classList.remove('hidden');
-            
-            document.getElementById('userName').textContent = name;
-            document.getElementById('loginTypeText').textContent = '证件登录';
-
-            if (hasDrawn) {
-                document.getElementById('drawBtn').disabled = true;
-                document.getElementById('drawBtn').textContent = '已抽奖';
-                document.getElementById('alreadyDrawn').classList.remove('hidden');
-                if (prize) {
-                    document.getElementById('previousPrize').textContent = `您获得的奖项：${prize}`;
+                
+                // 检查是否已抽奖
+                if (loginResult.has_drawn) {
+                    // 显示已抽奖结果
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('drawResult').classList.remove('hidden');
+                    document.getElementById('prizeName').textContent = loginResult.prize || '未知奖项';
+                    document.getElementById('congratulations').textContent = `您之前获得的奖项：${loginResult.prize}`;
+                    return;
                 }
-            }
-        }
-
-        // 开始抽奖
-        async function startDraw() {
-            const drawBtn = document.getElementById('drawBtn');
-            drawBtn.disabled = true;
-            drawBtn.textContent = '抽奖中...';
-
-            try {
-                const response = await fetch('/api/draw', {
+                
+                // 直接执行抽奖
+                const drawResponse = await fetch('/api/draw', {
                     method: 'POST'
                 });
 
-                const result = await response.json();
+                const drawResult = await drawResponse.json();
                 
-                if (result.success) {
-                    // 显示抽奖结果
-                    document.getElementById('drawResult').classList.remove('hidden');
-                    document.getElementById('prizeName').textContent = result.prize;
-                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${result.prize}！🎉`;
+                // 显示抽奖结果
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('drawResult').classList.remove('hidden');
+                
+                if (drawResult.success) {
+                    document.getElementById('prizeName').textContent = drawResult.prize;
+                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！🎉`;
                 } else {
-                    alert(result.message);
-                    drawBtn.disabled = false;
-                    drawBtn.textContent = '开始抽奖';
+                    document.getElementById('prizeName').textContent = '未中奖';
+                    document.getElementById('congratulations').textContent = drawResult.message || '很遗憾，未能抽中奖项';
                 }
             } catch (error) {
-                alert('网络错误，请稍后再试');
-                drawBtn.disabled = false;
-                drawBtn.textContent = '开始抽奖';
+                showMessage('网络错误，请稍后再试', 'error');
             }
         }
     </script>

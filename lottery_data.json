@@ -2,117 +2,117 @@
   "users": {
     "123456789012345678": {
       "name": "张三",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "A123456789": {
       "name": "John Smith",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110105199001011234": {
       "name": "李四",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "X987654321": {
       "name": "Maria Garcia",
       "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "prize": "参与奖",
+      "draw_time": "2026-03-26 16:12:42"
     },
     "310101198512121234": {
       "name": "王五",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199001011238": {
       "name": "张三",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199102022347": {
       "name": "李四",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199304044565": {
       "name": "赵六",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199405055674": {
       "name": "陈七",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:25:15"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199506066783": {
       "name": "杨八",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199607077892": {
       "name": "黄九",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "110101199708088901": {
       "name": "周十",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199001011235": {
       "name": "吴倩",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199102022344": {
       "name": "郑丽",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199203033453": {
       "name": "孙芳",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199304044562": {
       "name": "朱琳",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199405055671": {
       "name": "高燕",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "310101199506066780": {
       "name": "林婷",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "440101199001011232": {
       "name": "刘伟",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "440101199102022341": {
       "name": "陈明",
@@ -122,45 +122,45 @@
     },
     "440101199203033450": {
       "name": "张华",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "440101199304044569": {
       "name": "李勇",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "440101199405055678": {
       "name": "王浩",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "440101199506066787": {
       "name": "刘杰",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7294810563": {
       "name": "Emma Johnson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8562947103": {
       "name": "Liam Smith",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1047385926": {
       "name": "Olivia Williams",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9285746103": {
       "name": "Noah Brown",
@@ -170,597 +170,597 @@
     },
     "4610293857": {
       "name": "Ava Jones",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2957384610": {
       "name": "Elijah Garcia",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5830192746": {
       "name": "William Miller",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1746392850": {
       "name": "Sophia Davis",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8302571946": {
       "name": "James Rodriguez",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4917258306": {
       "name": "Isabella Wilson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3068529174": {
       "name": "Benjamin Martinez",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6194730258": {
       "name": "Mia Anderson",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2583061947": {
       "name": "Lucas Taylor",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7461930582": {
       "name": "Amelia Thomas",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9305827461": {
       "name": "Henry Hernandez",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5182937460": {
       "name": "Evelyn Moore",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3857291046": {
       "name": "Alexander Martin",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1946385720": {
       "name": "Abigail Thompson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8274619305": {
       "name": "Daniel Garcia",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4730582741": {
       "name": "Sofia Martinez",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6529174830": {
       "name": "Matthew Lopez",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3105827469": {
       "name": "Avery Gonzalez",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8461930527": {
       "name": "David Wilson",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2058374619": {
       "name": "Chloe Clark",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7193058246": {
       "name": "Joseph Lewis",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4385729106": {
       "name": "Zoe Hall",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1529473086": {
       "name": "Andrew Allen",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6830529174": {
       "name": "Scarlett Young",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3746193058": {
       "name": "Christopher King",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9104638527": {
       "name": "Victoria Wright",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5291748306": {
       "name": "Thomas Hill",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1830582749": {
       "name": "Grace Scott",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7619305824": {
       "name": "Charles Green",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4058274613": {
       "name": "Lily Baker",
-      "has_drawn": true,
-      "prize": "一等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8946385720": {
       "name": "Hunter Adams",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2385729104": {
       "name": "Nora Nelson",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6104638572": {
       "name": "Samuel Carter",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1748305297": {
       "name": "Penelope Mitchell",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8529174830": {
       "name": "Ryan Roberts",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4193058276": {
       "name": "Aria Turner",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9572910463": {
       "name": "Jackson Phillips",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3058274618": {
       "name": "Ellie Campbell",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7463857291": {
       "name": "Josiah Parker",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1930582746": {
       "name": "Luna Evans",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5827461930": {
       "name": "Julian Edwards",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2746193058": {
       "name": "Stella Collins",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6385729104": {
       "name": "Gabriel Stewart",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1291748305": {
       "name": "Willow Sanchez",
-      "has_drawn": true,
-      "prize": "一等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8746193052": {
       "name": "Luke Morris",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4619305827": {
       "name": "Nova Rogers",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9058274613": {
       "name": "Isaac Reed",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3572910468": {
       "name": "Aurora Cook",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7291046385": {
       "name": "Jayden Morgan",
-      "has_drawn": true,
-      "prize": "一等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1830529174": {
       "name": "Bella Bell",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5729104638": {
       "name": "Leonard Murphy",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2193058274": {
       "name": "Elliana Bailey",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6582746193": {
       "name": "Elias Rivera",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1463857290": {
       "name": "Mila Cooper",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8104638572": {
       "name": "Anthony Richardson",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4572910463": {
       "name": "Harper Cox",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:25:15"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7193058274": {
       "name": "Brooks Foster",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1638572910": {
       "name": "Isabelle Torres",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5910463857": {
       "name": "Jaxon Peterson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2463857290": {
       "name": "Lucia Gray",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6857291046": {
       "name": "Lincoln Ramirez",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1305827469": {
       "name": "Eleanor James",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8638572910": {
       "name": "Miles Watson",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4291046385": {
       "name": "Lydia Brooks",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9746193058": {
       "name": "Adam Bennett",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3274619305": {
       "name": "Paisley Wood",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7582746193": {
       "name": "Nathan Barnes",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1193058274": {
       "name": "Clara Ross",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5463857290": {
       "name": "Hazel Henderson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2857291046": {
       "name": "Christian Coleman",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6291046385": {
       "name": "Anna Murphy",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1746385729": {
       "name": "Jasper Price",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8058274613": {
       "name": "Madison Hayes",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4463857290": {
       "name": "Blake Cooper",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9174830527": {
       "name": "Skylar Sanders",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3638572910": {
       "name": "Everly Patterson",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7305827461": {
       "name": "Asher Washington",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1572910468": {
       "name": "Lucille Butler",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5830529174": {
       "name": "Connor Foster",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2104638572": {
       "name": "Julia Simmons",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6463857290": {
       "name": "Easton Long",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:25:15"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1910463857": {
       "name": "Caroline Perez",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4730582746": {
       "name": "Paige Powell",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:25:15"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9529174830": {
       "name": "Colton Russell",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3193058274": {
       "name": "Alexandra Diaz",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7046385729": {
       "name": "Beau Hayes",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1619305827": {
       "name": "Katherine Bryant",
-      "has_drawn": true,
-      "prize": "二等奖",
-      "draw_time": "2026-03-26 15:19:22"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5385729104": {
       "name": "Jude Griffin",
-      "has_drawn": true,
-      "prize": "一等奖",
-      "draw_time": "2026-03-26 15:25:15"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1483052917": {
       "name": "Valeria Walton",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8917483052": {
       "name": "Logan Boone",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "9638572910": {
       "name": "Brandon Hall",
-      "has_drawn": true,
-      "prize": "一等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "3291046385": {
       "name": "Genesis Guerrero",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "7572910463": {
       "name": "Adrian Rose",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "1104638572": {
       "name": "Reagan Porter",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "5438572910": {
       "name": "Jonathon Fox",
-      "has_drawn": true,
-      "prize": "三等奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "2810463857": {
       "name": "Emerson Pierce",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "6274619305": {
       "name": "Kailey Shaw",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "8461930582": {
       "name": "Marley Rios",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     },
     "4174830529": {
       "name": "Trenton Reed",
-      "has_drawn": true,
-      "prize": "参与奖",
-      "draw_time": "2026-03-26 15:18:35"
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     }
   },
   "prizes": [
@@ -768,26 +768,26 @@
       "name": "一等奖",
       "rate": 0.03,
       "max_count": 5,
-      "current_count": 5
+      "current_count": 0
     },
     {
       "name": "二等奖",
       "rate": 0.1,
       "max_count": 20,
-      "current_count": 20
+      "current_count": 0
     },
     {
       "name": "三等奖",
       "rate": 0.3,
       "max_count": 50,
-      "current_count": 50
+      "current_count": 0
     },
     {
       "name": "参与奖",
       "rate": 0.5,
       "max_count": 50,
-      "current_count": 50
+      "current_count": 1
     }
   ],
-  "total_draws": 125
+  "total_draws": 1
 }
