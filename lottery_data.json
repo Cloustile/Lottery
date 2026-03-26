@@ -29,6 +29,120 @@
       "has_drawn": false,
       "prize": null,
       "draw_time": null
+    },
+    "110101199001011238": {
+      "name": "张三",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199102022347": {
+      "name": "李四",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199304044565": {
+      "name": "赵六",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199405055674": {
+      "name": "陈七",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199506066783": {
+      "name": "杨八",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199607077892": {
+      "name": "黄九",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "110101199708088901": {
+      "name": "周十",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199001011235": {
+      "name": "吴倩",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199102022344": {
+      "name": "郑丽",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199203033453": {
+      "name": "孙芳",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199304044562": {
+      "name": "朱琳",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199405055671": {
+      "name": "高燕",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "310101199506066780": {
+      "name": "林婷",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "440101199001011232": {
+      "name": "刘伟",
+      "has_drawn": true,
+      "prize": "参与奖",
+      "draw_time": "2026-03-26 11:30:21"
+    },
+    "440101199102022341": {
+      "name": "陈明",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "440101199203033450": {
+      "name": "张华",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "440101199304044569": {
+      "name": "李勇",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "440101199405055678": {
+      "name": "王浩",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
+    },
+    "440101199506066787": {
+      "name": "刘杰",
+      "has_drawn": false,
+      "prize": null,
+      "draw_time": null
     }
   },
   "prizes": [
@@ -54,8 +168,8 @@
       "name": "参与奖",
       "rate": 0.84,
       "max_count": 1000,
-      "current_count": 1
+      "current_count": 2
     }
   ],
-  "total_draws": 3
+  "total_draws": 4
 }

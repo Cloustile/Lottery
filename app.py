@@ -291,6 +291,39 @@ def get_users():
         'total': len(users_list)
     })
 
+@app.route('/api/users/delete', methods=['POST'])
+def delete_user():
+    """删除指定用户"""
+    data = load_data()
+    req_data = request.json
+    identifier = req_data.get('identifier', '').strip()
+    
+    if not identifier:
+        return jsonify({'success': False, 'message': '请提供证件号码'})
+    
+    # 检查用户是否存在
+    if identifier not in data['users']:
+        return jsonify({'success': False, 'message': '用户不存在'})
+    
+    user = data['users'][identifier]
+    
+    # 检查用户是否已抽奖
+    if user.get('has_drawn'):
+        return jsonify({
+            'success': False, 
+            'message': '该用户已参与抽奖，不能删除'
+        })
+    
+    # 删除用户
+    user_name = user['name']
+    del data['users'][identifier]
+    save_data(data)
+    
+    return jsonify({
+        'success': True,
+        'message': f'用户 {user_name} 已成功删除'
+    })
+
 if __name__ == '__main__':
     init_data()
     print('抽奖系统已启动！')

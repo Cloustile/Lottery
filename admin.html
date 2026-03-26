@@ -411,6 +411,7 @@ A123456789,John Smith
                         <th>状态</th>
                         <th>奖项</th>
                         <th>抽奖时间</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody id="usersList">
@@ -784,13 +785,16 @@ A123456789,John Smith
                     const tbody = document.getElementById('usersList');
                     
                     if (result.users.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">暂无用户数据</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">暂无用户数据</td></tr>';
                         return;
                     }
                     
                     let html = '';
                     result.users.forEach((user, index) => {
                         const statusText = user.has_drawn ? '<span style="color: #38ef7d;">✅ 已抽奖</span>' : '<span style="color: #999;">⏳ 未抽奖</span>';
+                        const deleteBtn = user.has_drawn 
+                            ? `<button class="btn btn-sm btn-danger" disabled title="已抽奖用户不能删除">🗑️ 删除</button>`
+                            : `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.identifier}')" ${user.has_drawn ? 'disabled' : ''}>🗑️ 删除</button>`;
                         html += `
                             <tr>
                                 <td>${index + 1}</td>
@@ -799,6 +803,7 @@ A123456789,John Smith
                                 <td>${statusText}</td>
                                 <td>${user.prize || '-'}</td>
                                 <td>${user.draw_time || '-'}</td>
+                                <td>${deleteBtn}</td>
                             </tr>
                         `;
                     });
@@ -808,7 +813,34 @@ A123456789,John Smith
             } catch (error) {
                 console.error('加载用户列表失败:', error);
                 const tbody = document.getElementById('usersList');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #f00;">加载失败</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #f00;">加载失败</td></tr>';
+            }
+        }
+
+        // 删除用户
+        async function deleteUser(identifier) {
+            if (!confirm(`确定要删除用户 ${identifier} 吗？\n此操作不可恢复！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    loadUsers(); // 刷新用户列表
+                    loadData(); // 刷新统计数据
+                } else {
+                    showMessage('删除失败：' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后再试', 'error');
             }
         }
 
