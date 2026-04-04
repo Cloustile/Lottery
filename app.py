@@ -1,17 +1,43 @@
-from flask import Flask, render_template, request, jsonify, session
-from flask_cors import CORS
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import random
 import json
 import os
 from datetime import datetime
-import hashlib
+from pydantic import BaseModel
+from typing import Optional, List
+import uvicorn
 
-app = Flask(__name__, template_folder='.')
-app.secret_key = 'lottery_secret_key_2026'  # 生产环境请修改为随机密钥
-CORS(app)
+app = FastAPI(title="幸运大抽奖系统")
+
+# 挂载静态文件和模板
+app.mount("/static", StaticFiles(directory="."), name="static")
+templates = Jinja2Templates(directory=".")
 
 # 数据文件路径
 DATA_FILE = 'lottery_data.json'
+
+# Pydantic 模型定义
+class LoginRequest(BaseModel):
+    identifier: str
+    name: Optional[str] = None
+
+class PrizeUpdate(BaseModel):
+    name: str
+    rate: float
+    max_count: int
+    current_count: Optional[int] = 0
+
+class PrizesUpdateRequest(BaseModel):
+    prizes: List[PrizeUpdate]
+
+class UserImportRequest(BaseModel):
+    users: List[dict]
+
+class UserDeleteRequest(BaseModel):
+    identifier: str
 
 # 加载数据
 def load_data():
@@ -43,66 +69,59 @@ def init_data():
     save_data(data)
     return data
 
-# 验证身份证号（简化版，去掉长度限制以支持国际证件）
-def validate_id_card(id_card):
-    # 只要求非空即可
-    if id_card and len(id_card) > 0:
-        return True
-    return False
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-# 验证手机号（简化版）
-def validate_phone(phone):
-    if len(phone) == 11 and phone.startswith('1'):
-        return True
-    return False
+@app.get("/admin", response_class=HTMLResponse)
+async def admin(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
-
-@app.route('/api/login', methods=['POST'])
-def login():
+@app.post("/api/login")
+async def login(login_request: LoginRequest):
     data = load_data()
-    req_data = request.json
-    identifier = req_data.get('identifier')
+    identifier = login_request.identifier
     
     # 验证证件号码格式（简化验证，只要求非空）
     if not identifier or len(identifier) == 0:
-        return jsonify({'success': False, 'message': '请输入证件号码'})
+        return JSONResponse(content={'success': False, 'message': '请输入证件号码'})
     
     # 检查用户是否已存在
     if identifier not in data['users']:
-        return jsonify({
+        return JSONResponse(content={
             'success': False, 
             'message': '信息不匹配，该用户不存在'
         })
     
-    session['user_id'] = identifier
-    return jsonify({
+    user_info = data['users'][identifier]
+    
+    # 创建响应并设置 Cookie
+    response = JSONResponse(content={
         'success': True, 
         'message': '登录成功',
-        'has_drawn': data['users'][identifier]['has_drawn'],
-        'prize': data['users'][identifier]['prize']
+        'has_drawn': user_info['has_drawn'],
+        'prize': user_info.get('prize')
     })
+    response.set_cookie(key="user_id", value=identifier, httponly=True)
+    
+    return response
 
-@app.route('/api/draw', methods=['POST'])
-def draw():
+@app.post("/api/draw")
+async def draw(request: Request):
     data = load_data()
-    user_id = session.get('user_id')
+    
+    # 从 Cookie 中获取 user_id
+    user_id = request.cookies.get('user_id')
     
     if not user_id:
-        return jsonify({'success': False, 'message': '请先登录'})
+        return JSONResponse(content={'success': False, 'message': '请先登录'})
     
     user = data['users'].get(user_id)
     if not user:
-        return jsonify({'success': False, 'message': '用户不存在'})
+        return JSONResponse(content={'success': False, 'message': '用户不存在'})
     
     if user['has_drawn']:
-        return jsonify({'success': False, 'message': '您已经抽过奖了'})
+        return JSONResponse(content={'success': False, 'message': '您已经抽过奖了'})
     
     # 执行抽奖
     prizes = data['prizes']
@@ -110,7 +129,7 @@ def draw():
     # 检查是否还有名额
     available_prizes = [p for p in prizes if p['current_count'] < p['max_count']]
     if not available_prizes:
-        return jsonify({'success': False, 'message': '所有奖项已抽完'})
+        return JSONResponse(content={'success': False, 'message': '所有奖项已抽完'})
     
     # 智能抽奖逻辑：如果随机到的奖项已抽完，则自动重抽
     won_prize = None
@@ -156,21 +175,21 @@ def draw():
     
     save_data(data)
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'prize': won_prize['name'],
         'message': f'恭喜您获得{won_prize["name"]}！'
     })
 
-@app.route('/api/prizes', methods=['GET'])
-def get_prizes():
+@app.get("/api/prizes")
+async def get_prizes():
     data = load_data()
     
     # 计算统计数据
     total_users = len(data['users'])  # 总用户数
     participated_users = sum(1 for user in data['users'].values() if user.get('has_drawn'))  # 已参与用户数
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'prizes': data['prizes'],
         'total_draws': data['total_draws'],
@@ -178,23 +197,24 @@ def get_prizes():
         'participated_users': participated_users
     })
 
-@app.route('/api/prizes', methods=['POST'])
-def update_prizes():
+@app.post("/api/prizes")
+async def update_prizes(prizes_request: PrizesUpdateRequest):
     data = load_data()
-    new_prizes = request.json.get('prizes')
+    new_prizes = prizes_request.prizes
     
     # 更新奖项配置
     for i, prize in enumerate(new_prizes):
         if i < len(data['prizes']):
-            data['prizes'][i]['name'] = prize['name']
-            data['prizes'][i]['rate'] = float(prize['rate'])
-            data['prizes'][i]['max_count'] = int(prize['max_count'])
+            data['prizes'][i]['name'] = prize.name
+            data['prizes'][i]['rate'] = float(prize.rate)
+            data['prizes'][i]['max_count'] = int(prize.max_count)
+            # 保持 current_count 不变
     
     save_data(data)
-    return jsonify({'success': True, 'message': '奖项配置已更新'})
+    return JSONResponse(content={'success': True, 'message': '奖项配置已更新'})
 
-@app.route('/api/winners', methods=['GET'])
-def get_winners():
+@app.get("/api/winners")
+async def get_winners():
     data = load_data()
     
     # 获取所有已抽奖的用户
@@ -209,16 +229,16 @@ def get_winners():
             })
     
     # 按抽奖时间正序排序（最早的在前）
-    winners.sort(key=lambda x: x['draw_time'])
+    winners.sort(key=lambda x: x['draw_time'] if x['draw_time'] else '')
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'winners': winners,
         'total': len(winners)
     })
 
-@app.route('/api/reset', methods=['POST'])
-def reset_lottery():
+@app.post("/api/reset")
+async def reset_lottery():
     data = load_data()
     # 重置所有用户抽奖状态
     for user_id in data['users']:
@@ -233,17 +253,16 @@ def reset_lottery():
     data['total_draws'] = 0
     save_data(data)
     
-    return jsonify({'success': True, 'message': '抽奖系统已重置'})
+    return JSONResponse(content={'success': True, 'message': '抽奖系统已重置'})
 
-@app.route('/api/users/import', methods=['POST'])
-def import_users():
+@app.post("/api/users/import")
+async def import_users(user_import: UserImportRequest):
     """批量导入用户"""
     data = load_data()
-    req_data = request.json
-    users_data = req_data.get('users', [])
+    users_data = user_import.users
     
     if not users_data:
-        return jsonify({'success': False, 'message': '请提供用户数据'})
+        return JSONResponse(content={'success': False, 'message': '请提供用户数据'})
     
     success_count = 0
     skip_count = 0
@@ -280,15 +299,15 @@ def import_users():
     if error_list:
         message += f"，{len(error_list)} 个错误"
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'message': message,
         'success_count': success_count,
         'skip_count': skip_count
     })
 
-@app.route('/api/users', methods=['GET'])
-def get_users():
+@app.get("/api/users")
+async def get_users():
     """获取所有用户列表"""
     data = load_data()
     
@@ -305,31 +324,30 @@ def get_users():
     # 按姓名排序
     users_list.sort(key=lambda x: x['name'])
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'users': users_list,
         'total': len(users_list)
     })
 
-@app.route('/api/users/delete', methods=['POST'])
-def delete_user():
+@app.post("/api/users/delete")
+async def delete_user(user_delete: UserDeleteRequest):
     """删除指定用户"""
     data = load_data()
-    req_data = request.json
-    identifier = req_data.get('identifier', '').strip()
+    identifier = user_delete.identifier.strip()
     
     if not identifier:
-        return jsonify({'success': False, 'message': '请提供证件号码'})
+        return JSONResponse(content={'success': False, 'message': '请提供证件号码'})
     
     # 检查用户是否存在
     if identifier not in data['users']:
-        return jsonify({'success': False, 'message': '用户不存在'})
+        return JSONResponse(content={'success': False, 'message': '用户不存在'})
     
     user = data['users'][identifier]
     
     # 检查用户是否已抽奖
     if user.get('has_drawn'):
-        return jsonify({
+        return JSONResponse(content={
             'success': False, 
             'message': '该用户已参与抽奖，不能删除'
         })
@@ -339,7 +357,7 @@ def delete_user():
     del data['users'][identifier]
     save_data(data)
     
-    return jsonify({
+    return JSONResponse(content={
         'success': True,
         'message': f'用户 {user_name} 已成功删除'
     })
@@ -347,6 +365,13 @@ def delete_user():
 if __name__ == '__main__':
     init_data()
     print('抽奖系统已启动！')
-    print('用户抽奖页面：http://localhost:5000/')
-    print('管理后台：http://localhost:5000/admin')
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print('用户抽奖页面：http://localhost:8000/')
+    print('管理后台：http://localhost:8000/admin')
+    print('API 文档：http://localhost:8000/docs')
+    print('\n提示：终端会显示请求日志，200 OK 表示正常运行')
+    print('按 Ctrl+C 停止服务器\n')
+    
+    import logging
+    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    
+    uvicorn.run(app, host='0.0.0.0', port=8000)
