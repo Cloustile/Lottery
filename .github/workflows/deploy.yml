@@ -1,0 +1,105 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+    - name: Add server to known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H 139.196.201.114 >> ~/.ssh/known_hosts
+
+    - name: Deploy to server
+      env:
+        SERVER_IP: 139.196.201.114
+        SERVER_USER: admin
+        DEPLOY_PATH: /home/admin/lottery
+      run: |
+        echo "🚀 Starting deployment to server..."
+        
+        # 同步文件到服务器
+        rsync -avz --delete \
+          --exclude='.git/' \
+          --exclude='__pycache__/' \
+          --exclude='*.pyc' \
+          --exclude='.vercel/' \
+          --exclude='node_modules/' \
+          --exclude='.env' \
+          --exclude='.github/' \
+          --exclude='*.md' \
+          --exclude='deploy-vercel.bat' \
+          --exclude='start.bat' \
+          --exclude='start.sh' \
+          ./ ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.DEPLOY_PATH }}/
+        
+        echo "✅ Files synced to server"
+        
+        # 在服务器上执行部署
+        ssh ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'EOF'
+          cd $DEPLOY_PATH
+          
+          echo "📦 Step 1: Installing dependencies..."
+          pip3 install -r requirements.txt
+          
+          echo "🔄 Step 2: Restarting service..."
+          
+          # 方法1: 如果使用 systemd 服务
+          if systemctl is-active --quiet lottery.service 2>/dev/null; then
+            echo "Using systemd service..."
+            sudo systemctl restart lottery.service
+            sleep 3
+            
+            if systemctl is-active --quiet lottery.service; then
+              echo "✅ Service restarted successfully via systemd"
+              systemctl status lottery.service --no-pager -l
+            else
+              echo "❌ Service failed to start"
+              journalctl -u lottery.service --no-pager -n 50
+              exit 1
+            fi
+          
+          # 方法2: 使用进程管理
+          else
+            echo "Using process management..."
+            
+            # 停止旧进程
+            pkill -f "python.*app.py" || true
+            sleep 2
+            
+            # 启动新进程
+            nohup python3 app.py > lottery.log 2>&1 &
+            echo $! > lottery.pid
+            
+            echo "⏳ Waiting for service to start..."
+            sleep 3
+            
+            # 检查服务状态
+            if pgrep -f "python.*app.py" > /dev/null; then
+              echo "✅ Service started successfully"
+              echo "📊 Process ID: $(cat lottery.pid)"
+              echo "📄 Log file: lottery.log"
+            else
+              echo "❌ Service failed to start"
+              echo "📄 Last 50 lines of log:"
+              tail -n 50 lottery.log
+              exit 1
+            fi
+          fi
+        EOF
+        
+        echo "🎉 Deployment completed successfully!"
+        echo "🌐 Access your application at: http://139.196.201.114:8000"

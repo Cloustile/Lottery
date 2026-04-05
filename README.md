@@ -81,6 +81,23 @@ vercel --prod
 - **Railway.app**: 简单易用，提供数据库服务
 - **传统云服务器**: 完全控制，需要手动配置
 
+### 🤖 自动部署（GitHub Actions）
+
+项目已配置 GitHub Actions 工作流，实现代码推送后自动部署到您的服务器。
+
+**快速配置：**
+1. 在服务器上配置 SSH 密钥
+2. 在 GitHub Secrets 中添加 `SERVER_SSH_KEY`
+3. 推送到 main 分支即可自动部署
+
+**详细指南：** 查看 [GITHUB_ACTIONS_DEPLOY.md](GITHUB_ACTIONS_DEPLOY.md)
+
+**服务器信息：**
+- IP: `139.196.201.114`
+- 用户: `admin`
+- 部署路径: `/home/admin/lottery`
+- 访问地址: `http://139.196.201.114:8000`
+
 ## 项目结构
 ```
 Lottery/
