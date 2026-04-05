@@ -41,9 +41,14 @@ class UserDeleteRequest(BaseModel):
 
 # 加载数据
 def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    try:
+        if os.path.exists(DATA_FILE):
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"警告：读取数据文件失败: {e}")
+    
+    # 返回默认数据结构
     return {
         'users': {},  # 用户数据 {身份证号/手机号：{name, login_type, has_drawn, prize}}
         'prizes': [],  # 奖项配置 [{name, rate, max_count, current_count}]
@@ -52,8 +57,13 @@ def load_data():
 
 # 保存数据
 def save_data(data):
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    try:
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        # Vercel 环境文件系统只读，忽略写入错误
+        print(f"警告：保存数据文件失败（这在 Vercel 等无状态平台是正常的）: {e}")
+        pass
 
 # 初始化数据
 def init_data():

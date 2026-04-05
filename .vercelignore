@@ -34,13 +34,22 @@ wheels/
 .DS_Store
 Thumbs.db
 
+# Git
+.git/
+.gitignore
+
 # 测试文件
 test_*.py
 
-# 文档
-*.md
-!README.md
+# 文档（保留 README）
+MIGRATION_GUIDE.md
+VERCEL_DEPLOYMENT.md
+DEPLOYMENT_CHECKLIST.md
 
 # 启动脚本
 start.bat
 start.sh
+deploy-vercel.bat
+
+# 图片资源（如果不需要可以排除）
+# image/
