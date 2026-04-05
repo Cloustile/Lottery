@@ -26,7 +26,7 @@
 - ✅ 数据统计看板（总次数/已发奖/人数）
 - ✅ 进度监控可视化
 - ✅ 用户批量导入/删除
-- ✅ 系统一键重置
+- ✅ 系统统键重置
 
 ## 快速开始
 
@@ -55,6 +55,31 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 - **管理后台**: http://localhost:8000/admin
 - **API 文档**: http://localhost:8000/docs (FastAPI 自动生成)
 - **ReDoc 文档**: http://localhost:8000/redoc
+
+## ☁️ 云部署
+
+### Vercel 部署（推荐）
+
+项目已配置好 Vercel 部署文件，支持一键部署到云端。
+
+**快速部署：**
+```bash
+# Windows 用户：双击运行
+deploy-vercel.bat
+
+# 或手动执行
+npm install -g vercel
+vercel --prod
+```
+
+**详细指南：** 查看 [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)
+
+⚠️ **重要提示：** Vercel 是无状态平台，数据无法持久化保存。适合短期活动或演示用途。如需长期运行，建议集成外部数据库（MongoDB/Supabase）。
+
+### 其他云平台
+- **Render.com**: 支持完整功能，包括数据持久化（推荐）
+- **Railway.app**: 简单易用，提供数据库服务
+- **传统云服务器**: 完全控制，需要手动配置
 
 ## 项目结构
 ```
