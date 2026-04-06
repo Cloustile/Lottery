@@ -77,3 +77,4 @@ github_actions_deploy.pub
 *.backup
 *.bak
 lottery_data.backup.*.json
+lottery_data.json
