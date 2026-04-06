@@ -1,19 +1,21 @@
 [Unit]
-Description=Lottery Web Application
+Description=Lottery FastAPI Application
 After=network.target
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/usr/local/nginx/html
-ExecStart=/usr/bin/python3 /usr/local/nginx/html/app.py
+User=admin
+Group=admin
+WorkingDirectory=/home/admin/nginx-1.29.3/Lottery
+ExecStart=/usr/local/python3.8/bin/python3.8 -m uvicorn app:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=10
-StandardOutput=append:/usr/local/nginx/html/lottery.log
-StandardError=append:/usr/local/nginx/html/lottery_error.log
+Environment=PYTHONUNBUFFERED=1
 
-# 环境变量
-Environment="PYTHONUNBUFFERED=1"
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lottery-app
 
 [Install]
 WantedBy=multi-user.target
