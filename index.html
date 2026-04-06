@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸运大抽奖</title>
+    <title>幸运大抽奖 / Lucky Draw</title>
     <style>
         * {
             margin: 0;
@@ -145,14 +145,14 @@
         <!-- 登录表单 -->
         <div id="loginSection" class="login-form">
             <div class="form-group">
-                <label for="idCard">请输入身份证号/Please enter your ID number</label>
-                <input type="text" id="idCard" placeholder=" ">
+                <label for="idCard">证件号码 / ID Number</label>
+                <input type="text" id="idCard" placeholder="请输入证件号码 / Enter your ID number">
             </div>
             <div class="form-group">
-                <label for="name">姓名/Name</label>
-                <input type="text" id="name" placeholder="">
+                <label for="name">姓名 / Name</label>
+                <input type="text" id="name" placeholder="请输入姓名 / Enter your name">
             </div>
-            <button class="btn" onclick="login()">开始抽奖/Draw Now</button>
+            <button class="btn" onclick="login()">开始抽奖 / Start Draw</button>
 
             <div id="loginMessage" class="message"></div>
         </div>
@@ -187,12 +187,12 @@
             const name = document.getElementById('name').value.trim();
 
             if (!idCard) {
-                showMessage('请输入证件号码', 'error');
+                showMessage('请输入证件号码 / Please enter your ID number', 'error');
                 return;
             }
 
             if (!name) {
-                showMessage('请输入姓名', 'error');
+                showMessage('请输入姓名 / Please enter your name', 'error');
                 return;
             }
 
@@ -219,7 +219,8 @@
                     // 显示已抽奖结果
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('drawResult').classList.remove('hidden');
-                    document.getElementById('prizeName').textContent = loginResult.prize || '未知奖项';
+                    document.getElementById('prizeName').textContent = loginResult.prize || '未知奖项 / Unknown Prize';
+                    document.getElementById('congratulations').textContent = `您之前获得的奖项 / Your previous prize: ${loginResult.prize}`;
                     return;
                 }
                 
@@ -236,13 +237,13 @@
                 
                 if (drawResult.success) {
                     document.getElementById('prizeName').textContent = drawResult.prize;
-                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！🎉`;
+                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！/ Congratulations! You won ${drawResult.prize}! 🎉`;
                 } else {
-                    document.getElementById('prizeName').textContent = '未中奖';
-                    document.getElementById('congratulations').textContent = drawResult.message || '很遗憾，未能抽中奖项';
+                    document.getElementById('prizeName').textContent = '未中奖 / No Prize';
+                    document.getElementById('congratulations').textContent = drawResult.message || '很遗憾，未能抽中奖项 / Unfortunately, no prize was won';
                 }
             } catch (error) {
-                showMessage('网络错误，请稍后再试', 'error');
+                showMessage('网络错误，请稍后再试 / Network error, please try again later', 'error');
             }
         }
     </script>
