@@ -87,6 +87,10 @@ async def index(request: Request):
 async def admin(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
 
+@app.get("/view", response_class=HTMLResponse)
+async def view_page(request: Request):
+    return templates.TemplateResponse("view.html", {"request": request})
+
 @app.post("/api/login")
 async def login(login_request: LoginRequest):
     data = load_data()
