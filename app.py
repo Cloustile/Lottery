@@ -104,7 +104,7 @@ async def login(login_request: LoginRequest):
     if identifier not in data['users']:
         return JSONResponse(content={
             'success': False, 
-            'message': '信息不匹配，该用户不存在'
+            'message': '信息错误 / Incorrect information'
         })
     
     user_info = data['users'][identifier]
