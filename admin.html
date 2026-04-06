@@ -23,9 +23,11 @@
         }
 
         h1 {
-            color: #2c3e50;
+            color: #d32f2f;
             margin-bottom: 30px;
             text-align: center;
+            font-size: 32px;
+            font-weight: bold;
         }
 
         .dashboard {
@@ -38,20 +40,22 @@
         .stat-card {
             background: white;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
             text-align: center;
+            color: #d32f2f;
+            border: 2px solid #f5f0f0;
         }
 
         .stat-number {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: bold;
-            color: #667eea;
             margin-bottom: 10px;
+            color: #d32f2f;
         }
 
         .stat-label {
-            color: #7f8c8d;
+            color: #d32f2f;
             font-size: 16px;
         }
 
@@ -64,9 +68,9 @@
         }
 
         .panel h2 {
-            color: #2c3e50;
+            color: #d32f2f;
             margin-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #d32f2f;
             padding-bottom: 10px;
         }
 
@@ -91,7 +95,7 @@
         .stat-box-value {
             font-size: 28px;
             font-weight: bold;
-            color: #667eea;
+            color: #d32f2f;
             margin-bottom: 5px;
         }
 
@@ -154,9 +158,10 @@
         .edit-section {
             margin-top: 20px;
             padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            background: #ffffff;
+            border-radius: 15px;
             display: none;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
         }
 
         .edit-section.active {
@@ -178,58 +183,73 @@
         .edit-form-group label {
             margin-bottom: 5px;
             font-size: 14px;
-            color: #2c3e50;
+            color: #d32f2f;
+            font-weight: bold;
         }
 
         .edit-form-group input {
-            padding: 8px;
+            padding: 12px;
             border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
 
         .edit-form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #d32f2f;
         }
 
         .edit-actions {
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .btn-sm {
             padding: 8px 20px;
             font-size: 14px;
+            border-radius: 8px;
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            padding: 12px 25px;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: auto;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.4);
+            background: #fff9f9;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: white;
+            color: #f5576c;
+            border: 2px solid #f5576c;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: white;
+            color: #4caf50;
+            border: 2px solid #4caf50;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
         }
 
         /* 模态框样式 */
@@ -250,7 +270,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(211, 47, 47, 0.4);
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
@@ -268,7 +288,7 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #2c3e50;
+            color: #d32f2f;
             font-weight: bold;
         }
 
@@ -282,21 +302,22 @@
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #d32f2f;
         }
 
         .progress-bar {
             width: 100%;
             height: 20px;
-            background: #e0e0e0;
+            background: #f0f0f0;
             border-radius: 10px;
             overflow: hidden;
             margin-top: 10px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #d32f2f, #b71c1c);
             transition: width 0.3s;
         }
 
@@ -329,28 +350,36 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(211, 47, 47, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
         }
 
         th {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
             font-weight: bold;
-            color: #2c3e50;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff9f9;
         }
 
         tr:hover {
-            background: #f8f9fa;
+            background-color: #fff0f0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 抽奖系统管理后台</h1>
+        <h1>抽奖系统管理后台</h1>
 
         <!-- 统计面板 -->
         <div class="dashboard">
@@ -367,13 +396,13 @@
         <!-- 参与率进度条 -->
         <div class="panel" style="padding: 20px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #7f8c8d; font-size: 14px;">总体参与率</span>
-                <span id="participationRateText" style="color: #667eea; font-weight: bold; font-size: 14px;">0%</span>
+                <span style="color: #d32f2f; font-size: 14px; font-weight: bold;">总体参与率</span>
+                <span id="participationRateText" style="color: #d32f2f; font-weight: bold; font-size: 14px;">0%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-fill" id="participationProgress" style="width: 0%; background: linear-gradient(90deg, #11998e, #38ef7d);"></div>
+                <div class="progress-fill" id="participationProgress" style="width: 0%;"></div>
             </div>
-            <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: #95a5a6;">
+            <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: #d32f2f;">
                 <span>未参与：<span id="notParticipatedCount">0</span>人</span>
                 <span>已参与：<span id="participatedCount">0</span>人</span>
             </div>
@@ -381,7 +410,7 @@
 
         <!-- 各奖项详细统计 -->
         <div class="panel">
-            <h2>📊 奖项统计详情</h2>
+            <h2 style="color: #d32f2f; margin-bottom: 20px;">奖项统计详情</h2>
             <div class="stats-row" id="prizeStatsRow">
                 <!-- 各奖项统计将由 JS 动态加载 -->
             </div>
@@ -389,29 +418,29 @@
 
         <!-- 用户管理 -->
         <div class="panel">
-            <h2>👥 用户管理</h2>
+            <h2 style="color: #d32f2f; margin-bottom: 20px;">用户管理</h2>
             
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <button class="btn btn-sm btn-success" onclick="showImportModal()">➕ 批量导入用户</button>
-                    <button class="btn btn-sm" onclick="loadUsers()">🔄 刷新用户列表</button>
-                    <button class="btn btn-sm" id="toggleListBtn" onclick="toggleUserList()">👁️ 隐藏列表</button>
+                    <button class="btn btn-sm btn-success" onclick="showImportModal()">批量导入用户</button>
+                    <button class="btn btn-sm" onclick="loadUsers()">刷新用户列表</button>
+                    <button class="btn btn-sm" id="toggleListBtn" onclick="toggleUserList()">隐藏列表</button>
                 </div>
                 
                 <!-- 搜索框 -->
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <input type="text" id="searchInput" placeholder="搜索姓名或证件号..." 
-                           style="padding: 8px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; width: 300px;"
+                           style="padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; width: 300px;"
                            onkeyup="handleSearch(event)">
-                    <button class="btn btn-sm btn-primary" onclick="searchUsers()">🔍 搜索</button>
-                    <button class="btn btn-sm" onclick="clearSearch()">❌ 清除</button>
+                    <button class="btn btn-sm btn-primary" onclick="searchUsers()">搜索</button>
+                    <button class="btn btn-sm" onclick="clearSearch()">清除</button>
                 </div>
             </div>
 
             <!-- 用户导入模态框 -->
             <div id="importModal" class="modal hidden">
                 <div class="modal-content">
-                    <h3 style="margin-bottom: 15px;">📥 批量导入用户</h3>
+                    <h3 style="margin-bottom: 15px; color: #d32f2f;">📥 批量导入用户</h3>
                     <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
                         请按以下格式输入用户数据（每行一个用户，用逗号分隔）：<br>
                         <strong>身份证号/手机号，姓名</strong>
@@ -422,8 +451,8 @@ A123456789,John Smith
 110105199001011234，李四" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px;"></textarea>
                     
                     <div style="margin-top: 15px; display: flex; gap: 10px;">
-                        <button class="btn btn-sm btn-primary" onclick="confirmImport()">✅ 确认导入</button>
-                        <button class="btn btn-sm" onclick="closeImportModal()">❌ 取消</button>
+                        <button class="btn btn-sm btn-primary" onclick="confirmImport()">确认导入</button>
+                        <button class="btn btn-sm" onclick="closeImportModal()">取消</button>
                     </div>
                 </div>
             </div>
@@ -449,7 +478,7 @@ A123456789,John Smith
             </div>
             
             <!-- 空状态提示 -->
-            <div id="emptyState" class="hidden" style="text-align: center; padding: 50px; color: #999;">
+            <div id="emptyState" class="hidden" style="text-align: center; padding: 50px; color: #d32f2f;">
                 <div style="font-size: 64px; margin-bottom: 20px;">📭</div>
                 <div style="font-size: 18px; margin-bottom: 10px;">暂无用户数据</div>
                 <div style="font-size: 14px;">点击"批量导入用户"添加数据</div>
@@ -458,7 +487,7 @@ A123456789,John Smith
 
         <!-- 奖项配置 -->
         <div class="panel">
-            <h2>🏆 奖项配置</h2>
+            <h2 style="color: #d32f2f; margin-bottom: 20px;">奖项配置</h2>
             <div id="messageBox" class="message"></div>
             
             <div id="prizeContainer">
@@ -466,13 +495,13 @@ A123456789,John Smith
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-danger" onclick="resetLottery()">⚠️ 重置抽奖系统</button>
+                <button class="btn btn-danger" onclick="resetLottery()">重置抽奖系统</button>
             </div>
         </div>
 
         <!-- 获奖名单 -->
         <div class="panel">
-            <h2>📋 获奖名单</h2>
+            <h2 style="color: #d32f2f; margin-bottom: 20px;"> 获奖名单</h2>
             <table id="winnersTable">
                 <thead>
                     <tr>
@@ -547,17 +576,17 @@ A123456789,John Smith
                 const prizeDiv = document.createElement('div');
                 prizeDiv.className = 'stat-box';
                 prizeDiv.innerHTML = `
-                    <div class="stat-box-value" style="font-size: 20px; color: #2c3e50;">${prize.name}</div>
+                    <div class="stat-box-value" style="font-size: 20px; color: #d32f2f;">${prize.name}</div>
                     <div style="margin: 15px 0;">
-                        <div class="stat-box-value" style="color: #667eea;">${prize.current_count}/${prize.max_count}</div>
+                        <div class="stat-box-value" style="color: #d32f2f;">${prize.current_count}/${prize.max_count}</div>
                         <div class="stat-box-label">已抽/总数</div>
                     </div>
                     <div style="margin: 10px 0;">
-                        <div class="stat-box-value" style="font-size: 18px;">${percentage}%</div>
+                        <div class="stat-box-value" style="font-size: 18px; color: #d32f2f;">${percentage}%</div>
                         <div class="stat-box-label">抽取百分比</div>
                     </div>
                     <div style="margin: 10px 0;">
-                        <div class="stat-box-value" style="font-size: 18px;">${(prize.rate * 100).toFixed(1)}%</div>
+                        <div class="stat-box-value" style="font-size: 18px; color: #d32f2f;">${(prize.rate * 100).toFixed(1)}%</div>
                         <div class="stat-box-label">中奖概率</div>
                     </div>
                     <div class="progress-bar">
@@ -584,8 +613,8 @@ A123456789,John Smith
                     // 编辑模式：显示输入框
                     prizeDiv.innerHTML = `
                         <div class="prize-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h3 style="color: #2c3e50; margin: 0;">${prize.name}</h3>
-                            <button class="btn btn-sm" onclick="toggleEdit(${index})">✖️ 取消编辑</button>
+                            <h3 style="color: #d32f2f; margin: 0;">${prize.name}</h3>
+                            <button class="btn btn-sm" onclick="toggleEdit(${index})">取消编辑</button>
                         </div>
                         
                         <div class="edit-section active" id="editSection-${index}">
@@ -604,7 +633,7 @@ A123456789,John Smith
                                 </div>
                             </div>
                             <div class="edit-actions">
-                                <button class="btn btn-sm btn-success" onclick="savePrizeEdit(${index})">💾 保存此奖项</button>
+                                <button class="btn btn-sm btn-success" onclick="savePrizeEdit(${index})">保存此奖项</button>
                             </div>
                         </div>
                     `;
@@ -612,22 +641,22 @@ A123456789,John Smith
                     // 查看模式：只显示可配置的数据项
                     prizeDiv.innerHTML = `
                         <div class="prize-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h3 style="color: #2c3e50; margin: 0;">${prize.name}</h3>
-                            <button class="btn btn-sm" onclick="toggleEdit(${index})">✏️ 编辑</button>
+                            <h3 style="color: #d32f2f; margin: 0;">${prize.name}</h3>
+                            <button class="btn btn-sm" onclick="toggleEdit(${index})">编辑</button>
                         </div>
                         
                         <div class="stats-row">
                             <div class="stat-box">
                                 <div class="stat-box-label">奖项名称</div>
-                                <div class="stat-box-value" style="color: #2c3e50;">${prize.name}</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${prize.name}</div>
                             </div>
                             <div class="stat-box">
                                 <div class="stat-box-label">奖项总数</div>
-                                <div class="stat-box-value" style="color: #667eea;">${prize.max_count}</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${prize.max_count}</div>
                             </div>
                             <div class="stat-box">
                                 <div class="stat-box-label">中奖概率</div>
-                                <div class="stat-box-value" style="color: #2ecc71;">${(prize.rate * 100).toFixed(1)}%</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${(prize.rate * 100).toFixed(1)}%</div>
                             </div>
                         </div>
                     `;
@@ -862,11 +891,11 @@ A123456789,John Smith
             
             if (container.classList.contains('hidden')) {
                 container.classList.remove('hidden');
-                btn.textContent = '👁️ 隐藏列表';
+                btn.textContent = '隐藏列表';
                 btn.className = 'btn btn-sm';
             } else {
                 container.classList.add('hidden');
-                btn.textContent = '👁️ 显示列表';
+                btn.textContent = '显示列表';
                 btn.className = 'btn btn-sm btn-primary';
             }
         }
@@ -919,10 +948,10 @@ A123456789,John Smith
             
             let html = '';
             users.forEach((user, index) => {
-                const statusText = user.has_drawn ? '<span style="color: #38ef7d;">✅ 已抽奖</span>' : '<span style="color: #999;">⏳ 未抽奖</span>';
+                const statusText = user.has_drawn ? '<span style="color: #38ef7d;">已抽奖</span>' : '<span style="color: #999;">未抽奖</span>';
                 const deleteBtn = user.has_drawn 
-                    ? `<button class="btn btn-sm btn-danger" disabled title="已抽奖用户不能删除">🗑️ 删除</button>`
-                    : `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.identifier}')">🗑️ 删除</button>`;
+                    ? `<button class="btn btn-sm btn-danger" disabled title="已抽奖用户不能删除">删除</button>`
+                    : `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.identifier}')">删除</button>`;
                 html += `
                     <tr>
                         <td>${index + 1}</td>
