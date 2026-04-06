@@ -220,7 +220,7 @@
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('drawResult').classList.remove('hidden');
                     document.getElementById('prizeName').textContent = loginResult.prize || '未知奖项 / Unknown Prize';
-                    document.getElementById('congratulations').textContent = `您之前获得的奖项 / Your previous prize: ${loginResult.prize}`;
+                    
                     return;
                 }
                 
@@ -237,7 +237,7 @@
                 
                 if (drawResult.success) {
                     document.getElementById('prizeName').textContent = drawResult.prize;
-                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！/ Congratulations! You won ${drawResult.prize}! 🎉`;
+                    document.getElementById('congratulations').textContent = ` 恭喜您获得${drawResult.prize}！/ Congratulations! `;
                 } else {
                     document.getElementById('prizeName').textContent = '未中奖 / No Prize';
                     document.getElementById('congratulations').textContent = drawResult.message || '很遗憾，未能抽中奖项 / Unfortunately, no prize was won';
