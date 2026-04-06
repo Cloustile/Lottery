@@ -136,25 +136,96 @@
             display: none;
         }
 
+        /* 转盘样式 */
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 30px auto;
+            display: none;
+        }
+
+        .wheel-container.active {
+            display: block;
+        }
+
+        #wheelCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #d32f2f;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .result-details {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3e0;
+            border-radius: 10px;
+            border: 1px solid #ffe0b2;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1> 幸运转盘 / Lottery </h1>
+        <h1> 幸运大抽奖 / Lucky Draw </h1>
 
         <!-- 登录表单 -->
         <div id="loginSection" class="login-form">
             <div class="form-group">
-                <label for="idCard">请输入身份证号/Please enter your ID number</label>
-                <input type="text" id="idCard" placeholder=" ">
+                <label for="idCard">证件号码 / ID Number</label>
+                <input type="text" id="idCard" placeholder="请输入证件号码">
             </div>
             <div class="form-group">
-                <label for="name">姓名/Name</label>
-                <input type="text" id="name" placeholder="">
+                <label for="name">姓名 / Name</label>
+                <input type="text" id="name" placeholder="请输入姓名">
             </div>
-            <button class="btn" onclick="login()">开始抽奖/Draw Now</button>
+            <button class="btn" onclick="login()">开始抽奖 / Start Draw</button>
 
             <div id="loginMessage" class="message"></div>
+        </div>
+
+        <!-- 转盘区域 -->
+        <div id="wheelSection" class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <canvas id="wheelCanvas" width="350" height="350"></canvas>
+            <div class="wheel-center">GO</div>
         </div>
 
         <!-- 抽奖结果区域 -->
@@ -162,13 +233,18 @@
             <div class="prize-display">
                 <div class="prize-name" id="prizeName">???</div>
             </div>
-            <p id="congratulations" style="font-size: 20px; color: #333; margin-top: 20px;"></p>
-            
-            
+            <div class="result-details">
+                <p id="congratulations" style="font-size: 20px; color: #333; margin: 0;"></p>
+            </div>
         </div>
     </div>
 
     <script>
+        // 全局变量
+        let wheelRotation = 0;
+        let isSpinning = false;
+        let prizes = [];
+
         // 显示消息
         function showMessage(msg, type) {
             const messageEl = document.getElementById('loginMessage');
@@ -179,6 +255,164 @@
             setTimeout(() => {
                 messageEl.style.display = 'none';
             }, 3000);
+        }
+
+        // 获取奖项数据并绘制转盘
+        async function loadAndDrawWheel() {
+            try {
+                // 模拟数据或从API获取
+                // const response = await fetch('/api/prizes');
+                // const data = await response.json();
+                
+                // 如果API不可用，使用默认数据用于演示绘制效果
+                // 实际项目中应取消注释上面的 fetch 并使用下面的 data.prizes
+                /*
+                if (data.success && data.prizes && data.prizes.length > 0) {
+                    prizes = data.prizes;
+                    drawWheel();
+                    document.getElementById('wheelSection').classList.add('active');
+                }
+                */
+               
+               // 暂时使用静态数据确保转盘能画出来，实际请替换为 API 调用
+               const mockPrizes = [
+                   { name: "一等奖", probability: 1 },
+                   { name: "二等奖", probability: 2 },
+                   { name: "三等奖", probability: 3 },
+                   { name: "谢谢参与", probability: 4 }
+               ];
+               prizes = mockPrizes;
+               drawWheel();
+               // 注意：这里不自动显示转盘，只在登录后显示
+
+            } catch (error) {
+                console.error('加载奖项数据失败:', error);
+            }
+        }
+
+        // 绘制转盘
+        function drawWheel() {
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;
+
+            // 计算总概率
+            const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+
+            // 颜色数组
+            const colors = [
+                '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', 
+                '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2',
+                '#F8B739', '#6C5CE7', '#A29BFE', '#FD79A8'
+            ];
+
+            let startAngle = 0;
+
+            // 绘制每个奖项扇形
+            prizes.forEach((prize, index) => {
+                const sliceAngle = (prize.probability / totalProbability) * 2 * Math.PI;
+                const endAngle = startAngle + sliceAngle;
+
+                // 绘制扇形
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[index % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // 绘制文字
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 14px SimSun, Times New Roman';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = 2;
+                
+                // 文字换行处理
+                const text = prize.name;
+                const maxWidth = radius - 40;
+                if (ctx.measureText(text).width > maxWidth) {
+                    // 简化文字显示
+                    const displayText = text.length > 8 ? text.substring(0, 8) + '...' : text;
+                    ctx.fillText(displayText, radius - 20, 5);
+                } else {
+                    ctx.fillText(text, radius - 20, 5);
+                }
+                
+                ctx.restore();
+
+                startAngle = endAngle;
+            });
+        }
+
+        // 旋转转盘
+        function spinWheel(targetPrizeName) {
+            return new Promise((resolve) => {
+                const canvas = document.getElementById('wheelCanvas');
+                const targetPrize = prizes.find(p => p.name === targetPrizeName);
+                
+                if (!targetPrize) {
+                    resolve();
+                    return;
+                }
+
+                // 计算目标奖项的角度位置
+                const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+                let targetAngle = 0;
+                let currentAngle = 0;
+                
+                for (let prize of prizes) {
+                    const sliceAngle = (prize.probability / totalProbability) * 360;
+                    if (prize.name === targetPrizeName) {
+                        // 目标角度在扇形中间
+                        targetAngle = currentAngle + sliceAngle / 2;
+                        break;
+                    }
+                    currentAngle += sliceAngle;
+                }
+
+                // 计算需要旋转的总角度 (至少转5圈)
+                // 指针在上方(270度或-90度位置)，Canvas 0度在3点钟方向
+                // 为了让目标扇区停在指针下，我们需要计算偏移
+                // 简单处理：让目标角度转到 270 度位置
+                const spins = 5;
+                // 360 - targetAngle 是因为 Canvas 顺时针旋转，要让某角度到顶部，需反向计算
+                // 加上 270 (或 -90) 修正指针位置 (假设指针在正上方)
+                // 这里的算法简化为：最终角度 = 当前角度 + 多圈 + 偏移
+                // 修正：为了简化，我们让转盘旋转，使得目标扇区的中心对准指针（顶部）
+                // 顶部是 270度 (3/2 PI)。 
+                // 目标位置应该是: 270 - targetAngle
+                
+                let rotateAngle = 360 * spins + (270 - targetAngle);
+                
+                // 累加之前的旋转角度，防止反转
+                // 取模处理确保平滑
+                const currentMod = wheelRotation % 360;
+                rotateAngle = wheelRotation + (360 * spins) + (270 - targetAngle - currentMod);
+                
+                // 确保是正向旋转且足够圈数
+                if (rotateAngle - wheelRotation < 360 * spins) {
+                     rotateAngle += 360 * spins;
+                }
+
+                wheelRotation = rotateAngle;
+                
+                // 旋转画布
+                canvas.style.transform = `rotate(${wheelRotation}deg)`;
+
+                // 监听过渡结束
+                setTimeout(() => {
+                    resolve();
+                }, 4000); // 对应 CSS transition 时间
+            });
         }
 
         // 身份证号登录并直接抽奖
@@ -193,6 +427,11 @@
 
             if (!name) {
                 showMessage('请输入姓名', 'error');
+                return;
+            }
+
+            if (isSpinning) {
+                showMessage('转盘正在旋转中，请稍候...', 'error');
                 return;
             }
 
@@ -218,33 +457,62 @@
                 if (loginResult.has_drawn) {
                     // 显示已抽奖结果
                     document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('wheelSection').classList.remove('active');
                     document.getElementById('drawResult').classList.remove('hidden');
                     document.getElementById('prizeName').textContent = loginResult.prize || '未知奖项';
+                    document.getElementById('congratulations').textContent = `您之前获得的奖项：${loginResult.prize}`;
                     return;
                 }
                 
-                // 直接执行抽奖
+                // 加载并显示转盘 (如果还没加载)
+                if (prizes.length === 0) {
+                     await loadAndDrawWheel();
+                }
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('wheelSection').classList.add('active');
+                
+                // 执行抽奖API
                 const drawResponse = await fetch('/api/draw', {
                     method: 'POST'
                 });
 
                 const drawResult = await drawResponse.json();
                 
-                // 显示抽奖结果
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('drawResult').classList.remove('hidden');
-                
-                if (drawResult.success) {
-                    document.getElementById('prizeName').textContent = drawResult.prize;
-                    document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！🎉`;
-                } else {
+                if (!drawResult.success) {
+                    // 未中奖或错误
+                    // 即使未中奖，也可以转动转盘指向“谢谢参与”
+                    // 这里简化处理，直接显示结果，或者您可以选择让它转到“谢谢参与”
+                    document.getElementById('wheelSection').classList.remove('active');
+                    document.getElementById('drawResult').classList.remove('hidden');
                     document.getElementById('prizeName').textContent = '未中奖';
                     document.getElementById('congratulations').textContent = drawResult.message || '很遗憾，未能抽中奖项';
+                    return;
                 }
+                
+                // 开始旋转转盘
+                isSpinning = true;
+                
+                // 旋转到中奖结果
+                await spinWheel(drawResult.prize);
+                
+                // 显示抽奖结果
+                document.getElementById('wheelSection').classList.remove('active');
+                document.getElementById('drawResult').classList.remove('hidden');
+                document.getElementById('prizeName').textContent = drawResult.prize;
+                document.getElementById('congratulations').textContent = `🎉 恭喜您获得${drawResult.prize}！🎉`;
+                
+                isSpinning = false;
             } catch (error) {
+                console.error(error);
                 showMessage('网络错误，请稍后再试', 'error');
+                isSpinning = false;
             }
         }
+
+        // 页面加载时预加载奖项数据
+        window.addEventListener('load', () => {
+            loadAndDrawWheel();
+        });
     </script>
 </body>
 </html>
