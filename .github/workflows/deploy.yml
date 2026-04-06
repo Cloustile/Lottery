@@ -26,8 +26,8 @@ jobs:
     - name: Deploy to server
       env:
         SERVER_IP: 139.196.201.114
-        SERVER_USER: admin
-        DEPLOY_PATH: /home/admin/lottery
+        SERVER_USER: root
+        DEPLOY_PATH: /usr/local/nginx/html
       run: |
         echo "🚀 Starting deployment to server..."
         

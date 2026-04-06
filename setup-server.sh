@@ -9,8 +9,8 @@ echo "========================================="
 echo ""
 
 # 配置变量
-DEPLOY_USER="admin"
-DEPLOY_PATH="/home/admin/lottery"
+DEPLOY_USER="root"
+DEPLOY_PATH="/usr/local/nginx/html"
 APP_PORT=8000
 
 echo "📋 步骤 1: 创建部署目录"
