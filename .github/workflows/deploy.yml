@@ -57,6 +57,10 @@ jobs:
         ssh ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'EOF'
           cd $DEPLOY_PATH
           
+          echo "🔄 Cleaning up local changes before deployment..."
+          git fetch origin
+          git reset --hard origin/main
+          
           echo "📦 Step 1: Installing dependencies..."
           pip3 install -r requirements.txt
           
