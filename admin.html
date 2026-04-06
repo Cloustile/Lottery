@@ -555,15 +555,15 @@
             <!-- 用户导入模态框 -->
             <div id="importModal" class="modal hidden">
                 <div class="modal-content">
-                    <h3 style="margin-bottom: 15px; color: #d32f2f;">📥 批量导入用户</h3>
+                    <h3 style="margin-bottom: 15px; color: #d32f2f;"> 批量导入用户</h3>
                     <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
-                        请按以下格式输入用户数据（每行一个用户，用逗号分隔）：<br>
-                        <strong>身份证号/手机号，姓名</strong>
+                        每行一个用户，用<strong>英文</strong>逗号分隔：<br>
+                        <strong>身份证号,姓名</strong>
                     </p>
                     <textarea id="importData" rows="10" placeholder="示例：
-123456789012345678，张三
+123456789012345678,张三
 A123456789,John Smith
-110105199001011234，李四" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px;"></textarea>
+110105199001011234,李四" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px;"></textarea>
                     
                     <div style="margin-top: 15px; display: flex; gap: 10px;">
                         <button class="btn btn-sm btn-primary" onclick="confirmImport()">确认导入</button>
