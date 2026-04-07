@@ -356,15 +356,24 @@
             }
             
             .btn {
-                padding: 10px 20px;
+                padding: 12px 24px;
                 font-size: 14px;
-                min-width: 80px;
+                min-width: auto;
+                width: auto;
             }
             
             .btn-sm {
                 padding: 6px 15px;
                 font-size: 12px;
-                min-width: 60px;
+                min-width: auto;
+                width: auto;
+            }
+            
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
             }
             
             .simulation-results {
@@ -401,7 +410,16 @@
             }
             
             .btn {
-                width: 100%;
+                width: auto;
+                min-width: auto;
+                padding: 12px 24px;
+            }
+            
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
             }
             
             .input-group label {
@@ -431,7 +449,7 @@
             
             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="simulateLoginAndDraw()">开始模拟抽奖</button>
-                <button class="btn btn-danger" onclick="resetSimulation()">重置模拟数据</button>
+                <button class="btn btn-danger" onclick="resetSimulation()">重置抽奖信息</button>
             </div>
             
             <div class="progress-container" id="progressContainer" style="display: none;">
