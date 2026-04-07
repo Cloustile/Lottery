@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -375,6 +375,54 @@ async def delete_user(user_delete: UserDeleteRequest):
         'success': True,
         'message': f'用户 {user_name} 已成功删除'
     })
+
+@app.post("/api/users/delete-all")
+async def delete_all_users():
+    """一键删除所有用户"""
+    print("DEBUG: delete_all_users endpoint called")
+    try:
+        data = load_data()
+        print(f"DEBUG: Loaded data, user count: {len(data['users'])}")
+        
+        # Store the count for success message
+        user_count = len(data['users'])
+        
+        # Clear all users
+        data['users'] = {}
+        print("DEBUG: Users cleared from data")
+        
+        # Reset awards statistics since there are no users left
+        data['total_draws'] = 0
+        for prize in data['prizes']:
+            prize['current_count'] = 0
+        print("DEBUG: Statistics reset")
+        
+        save_data(data)
+        print("DEBUG: Data saved successfully")
+        
+        # Verify that the save actually worked by reading back
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                saved_data = json.load(f)
+            if len(saved_data['users']) == 0:
+                print("DEBUG: Verification successful - users cleared")
+            else:
+                print(f"DEBUG: Verification failed - users still exist: {len(saved_data['users'])}")
+        except Exception as verify_error:
+            print(f"DEBUG: Verification error: {verify_error}")
+        
+        return JSONResponse(content={
+            'success': True,
+            'message': f'所有 {user_count} 个用户已成功删除！'
+        })
+    except Exception as e:
+        print(f"ERROR in delete_all_users: {e}")
+        import traceback
+        traceback.print_exc()
+        return JSONResponse(content={
+            'success': False,
+            'message': '删除所有用户时发生错误，请稍后再试'
+        })
 
 if __name__ == '__main__':
     init_data()
