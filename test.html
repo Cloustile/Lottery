@@ -305,6 +305,114 @@
             background: #d32f2f;
             transition: width 0.3s ease;
         }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 0 5px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .panel {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .panel h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .stat-box {
+                padding: 10px;
+            }
+            
+            .stat-box-value {
+                font-size: 20px;
+                margin-bottom: 3px;
+            }
+            
+            .stat-box-label {
+                font-size: 11px;
+            }
+            
+            .input-group input {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 80px;
+            }
+            
+            .btn-sm {
+                padding: 6px 15px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+            
+            .simulation-results {
+                padding: 15px;
+            }
+            
+            .result-item {
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .progress-bar {
+                height: 16px;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .edit-form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .edit-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .input-group label {
+                font-size: 13px;
+            }
+            
+            .message {
+                padding: 10px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
