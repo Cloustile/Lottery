@@ -270,7 +270,6 @@
                     <tr>
                         <th>序号</th>
                         <th>用户</th>
-                        <th>身份证号</th>
                         <th>奖项</th>
                         <th>抽奖时间</th>
                     </tr>
@@ -361,7 +360,7 @@
                     const tbody = document.getElementById('winnersList');
                     
                     if (result.winners.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">暂无获奖数据</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">暂无获奖数据</td></tr>';
                         return;
                     }
                     
@@ -371,7 +370,6 @@
                             <tr>
                                 <td>${index + 1}</td>
                                 <td>${winner.name}</td>
-                                <td>${winner.identifier}</td>
                                 <td>${winner.prize}</td>
                                 <td>${winner.draw_time || '-'}</td>
                             </tr>
@@ -383,7 +381,7 @@
             } catch (error) {
                 console.error('加载获奖名单失败:', error);
                 const tbody = document.getElementById('winnersList');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #f00;">加载失败</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #f00;">加载失败</td></tr>';
             }
         }
 
