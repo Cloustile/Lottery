@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖系统测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f6fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d32f2f;
+            padding-bottom: 10px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-box-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+
+        .stat-box-label {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        .prize-list {
+            list-style: none;
+        }
+
+        .prize-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .prize-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .prize-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            flex: 1 1 auto;
+        }
+
+        .prize-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .prize-stat {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .prize-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .prize-stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .edit-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
+        }
+
+        .edit-section.active {
+            display: block;
+        }
+
+        .edit-form-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .edit-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .edit-form-group label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .edit-form-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .edit-form-group input:focus {
+            outline: none;
+            border-color: #d32f2f;
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            min-width: 80px;
+            white-space: nowrap;
+        }
+
+        .btn {
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: auto;
+            min-width: 100px;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.4);
+            background: #fff9f9;
+        }
+
+        .btn-danger {
+            background: white;
+            color: #f5576c;
+            border: 2px solid #f5576c;
+        }
+
+        .btn-success {
+            background: white;
+            color: #4caf50;
+            border: 2px solid #4caf50;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #4caf50;
+            border: 2px solid #4caf50;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #d32f2f;
+        }
+
+        .simulation-results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .simulation-results h3 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #d32f2f;
+        }
+
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #d32f2f;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>抽奖系统测试页面</h1>
+        
+        <!-- 模拟抽奖控制面板 -->
+        <div class="panel">
+            <h2>模拟抽奖控制</h2>
+            <div id="messageBox" class="message"></div>
+            
+            <div class="input-group">
+                <label>模拟登录用户数量（从现有用户中随机选择）</label>
+                <input type="number" id="simulationCount" min="1" max="1000" value="10" placeholder="请输入要模拟的用户数量">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="simulateLoginAndDraw()">开始模拟抽奖</button>
+                <button class="btn btn-danger" onclick="resetSimulation()">重置模拟数据</button>
+            </div>
+            
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;" id="progressText">准备中...</div>
+            </div>
+            
+            <div class="simulation-results" id="simulationResults" style="display: none;">
+                <h3>模拟结果</h3>
+                <div id="resultsList"></div>
+            </div>
+        </div>
+
+        <!-- 奖项配置（copied from admin) -->
+        <div class="panel">
+            <h2>奖项配置</h2>
+            <div id="prizeContainer">
+                <!-- 奖项列表将由 JS 动态加载 -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let prizes = [];
+        let isEditingMode = false;
+        let simulationRunning = false;
+
+        // 加载数据
+        async function loadData() {
+            try {
+                const response = await fetch('/api/prizes');
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 如果正在编辑，只更新非编辑状态的数据，或者保留编辑状态
+                    // 这里为了简单和稳定，我们只在没有处于编辑状态时完全重绘，
+                    // 或者更简单地：只更新 prizes 数据，然后重绘。
+                    // 为了防止闪烁，我们在编辑时不触发全量重绘，或者在重绘时保留焦点（较复杂）。
+                    // 最佳实践：编辑时停止自动刷新，或者仅在保存后刷新。
+                    // 此处我们更新数据并重绘，但 toggleEdit 会处理状态。
+                    
+                    // 保留现有的 isEditing 标记
+                    const editingIndex = prizes.findIndex(p => p.isEditing);
+                    
+                    prizes = result.prizes;
+                    
+                    // 如果之前有正在编辑的项，恢复其编辑状态
+                    if (editingIndex !== -1 && prizes[editingIndex]) {
+                        prizes[editingIndex].isEditing = true;
+                    }
+                    
+                    renderPrizes();
+                }
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+
+        // 渲染奖项列表
+        function renderPrizes() {
+            const container = document.getElementById('prizeContainer');
+            container.innerHTML = '';
+
+            prizes.forEach((prize, index) => {
+                const isEditing = prize.isEditing || false;
+                
+                const prizeDiv = document.createElement('div');
+                prizeDiv.className = 'panel';
+                prizeDiv.style.marginBottom = '20px';
+                
+                if (isEditing) {
+                    // 编辑模式：显示输入框
+                    prizeDiv.innerHTML = `
+                        <div class="prize-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: #d32f2f; margin: 0;">${prize.name}</h3>
+                            <button class="btn btn-sm" onclick="toggleEdit(${index})">取消编辑</button>
+                        </div>
+                        
+                        <div class="edit-section active" id="editSection-${index}">
+                            <div class="edit-form-row">
+                                <div class="edit-form-group">
+                                    <label>奖项名称</label>
+                                    <input type="text" id="editName-${index}" value="${prize.name}">
+                                </div>
+                                <div class="edit-form-group">
+                                    <label>奖项总数</label>
+                                    <input type="number" id="editMaxCount-${index}" value="${prize.max_count}">
+                                </div>
+                                <div class="edit-form-group">
+                                    <label>中奖概率 (%)</label>
+                                    <input type="number" step="0.1" id="editRate-${index}" value="${(prize.rate * 100).toFixed(1)}">
+                                </div>
+                            </div>
+                            <div class="edit-actions">
+                                <button class="btn btn-sm btn-success" onclick="savePrizeEdit(${index})">保存此奖项</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // 查看模式：只显示可配置的数据项
+                    prizeDiv.innerHTML = `
+                        <div class="prize-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: #d32f2f; margin: 0;">${prize.name}</h3>
+                            <button class="btn btn-sm" onclick="toggleEdit(${index})">编辑</button>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stat-box">
+                                <div class="stat-box-label">奖项名称</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${prize.name}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">奖项总数</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${prize.max_count}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">中奖概率</div>
+                                <div class="stat-box-value" style="color: #d32f2f;">${(prize.rate * 100).toFixed(1)}%</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(prizeDiv);
+            });
+        }
+
+        // 切换编辑模式
+        function toggleEdit(index) {
+            prizes[index].isEditing = !prizes[index].isEditing;
+            renderPrizes();
+        }
+
+        // 保存单个奖项的编辑
+        async function savePrizeEdit(index) {
+            const nameInput = document.getElementById(`editName-${index}`);
+            const maxCountInput = document.getElementById(`editMaxCount-${index}`);
+            const rateInput = document.getElementById(`editRate-${index}`);
+            
+            const updatedName = nameInput.value.trim() || prizes[index].name;
+            const updatedMaxCount = parseInt(maxCountInput.value) || prizes[index].max_count;
+            const updatedRate = parseFloat(rateInput.value) / 100 || prizes[index].rate;
+
+            // 立即保存到服务器
+            try {
+                const prizesToSave = prizes.map((p, i) => {
+                    if (i === index) {
+                        return {
+                            name: updatedName,
+                            rate: updatedRate,
+                            max_count: updatedMaxCount,
+                            current_count: p.current_count
+                        };
+                    }
+                    return {
+                        name: p.name,
+                        rate: p.rate,
+                        max_count: p.max_count,
+                        current_count: p.current_count
+                    };
+                });
+
+                const response = await fetch('/api/prizes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prizes: prizesToSave })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 更新本地数据
+                    prizes[index].name = updatedName;
+                    prizes[index].max_count = updatedMaxCount;
+                    prizes[index].rate = updatedRate;
+                    prizes[index].isEditing = false;
+                    
+                    renderPrizes();
+                    showMessage(`"${prizes[index].name}" 配置已更新并保存`, 'success');
+                } else {
+                    showMessage('保存失败：' + (result.message || '未知错误'), 'error');
+                }
+            } catch (error) {
+                console.error('保存奖项配置错误:', error);
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // 显示消息
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('messageBox');
+            messageEl.textContent = msg;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // 获取现有用户列表
+        async function getExistingUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const result = await response.json();
+                
+                if (result.success) {
+                    // The API returns an array of users, not an object
+                    return result.users.map(user => ({
+                        identifier: user.identifier,
+                        name: user.name,
+                        has_drawn: user.has_drawn
+                    }));
+                } else {
+                    throw new Error('获取用户列表失败');
+                }
+            } catch (error) {
+                console.error('获取现有用户错误:', error);
+                throw error;
+            }
+        }
+
+        // 模拟单个用户的登录和抽奖（使用现有 user 对象）
+        async function simulateSingleUser(user) {
+            try {
+                // Simulate login (just validate user exists - no creation)
+                const loginResponse = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        identifier: user.identifier
+                    }),
+                    credentials: 'include'
+                });
+                
+                const loginResult = await loginResponse.json();
+                if (!loginResult.success) {
+                    return { 
+                        success: false, 
+                        name: user.name,
+                        message: `登录失败: ${loginResult.message || '未知错误'}` 
+                    };
+                }
+                
+                // At this point, we know the user hasn't drawn yet (filtered in main function)
+                // So we can proceed directly to draw
+                
+                // Finally, simulate draw
+                const drawResponse = await fetch('/api/draw', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                const drawResult = await drawResponse.json();
+                if (drawResult.success) {
+                    return { 
+                        success: true, 
+                        name: user.name, 
+                        prize: drawResult.prize || '未中奖' 
+                    };
+                } else {
+                    return { 
+                        success: false, 
+                        name: user.name,
+                        message: `抽奖失败: ${drawResult.message || '未知错误'}` 
+                    };
+                }
+            } catch (error) {
+                console.error('模拟用户错误:', error);
+                return { 
+                    success: false, 
+                    name: user.name,
+                    message: `网络错误: ${error.message || '未知错误'}` 
+                };
+            }
+        }
+
+        // 主模拟函数 - modified to use existing users
+        async function simulateLoginAndDraw() {
+            if (simulationRunning) {
+                showMessage('模拟正在进行中，请等待完成', 'error');
+                return;
+            }
+            
+            const countInput = document.getElementById('simulationCount');
+            const requestedCount = parseInt(countInput.value);
+            
+            if (!requestedCount || requestedCount <= 0) {
+                showMessage('请输入有效的用户数量', 'error');
+                return;
+            }
+            
+            // Get existing users first
+            let existingUsers;
+            try {
+                existingUsers = await getExistingUsers();
+            } catch (error) {
+                showMessage('无法获取现有用户列表，请确保有用户数据', 'error');
+                return;
+            }
+            
+            if (existingUsers.length === 0) {
+                showMessage('系统中没有用户数据，请先导入用户', 'error');
+                return;
+            }
+            
+            // Filter out users who have already drawn (optional - you might want to include them to see the error)
+            const availableUsers = existingUsers.filter(user => !user.has_drawn);
+            
+            if (availableUsers.length === 0) {
+                showMessage('所有用户都已参与抽奖，无法进行新的模拟', 'error');
+                return;
+            }
+            
+            // Determine actual count to simulate
+            const actualCount = Math.min(requestedCount, availableUsers.length);
+            
+            if (actualCount < requestedCount) {
+                showMessage(`系统只有 ${availableUsers.length} 个可抽奖用户，将模拟 ${actualCount} 个`, 'success');
+            }
+            
+            simulationRunning = true;
+            const resultsList = document.getElementById('resultsList');
+            const simulationResults = document.getElementById('simulationResults');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            // Show progress UI
+            progressContainer.style.display = 'block';
+            simulationResults.style.display = 'none';
+            resultsList.innerHTML = '';
+            progressFill.style.width = '0%';
+            progressText.textContent = '准备中...';
+            
+            // Shuffle the available users array to get random selection
+            const shuffledUsers = [...availableUsers].sort(() => Math.random() - 0.5);
+            const usersToSimulate = shuffledUsers.slice(0, actualCount);
+            
+            let successCount = 0;
+            let failCount = 0;
+            let results = [];
+            
+            // Process users sequentially to avoid race conditions with file-based storage
+            for (let i = 0; i < usersToSimulate.length; i++) {
+                const result = await simulateSingleUser(usersToSimulate[i]);
+                
+                if (result.success) {
+                    successCount++;
+                    results.push(`<div class="result-item">✅ ${result.name} 获得: ${result.prize}</div>`);
+                } else {
+                    failCount++;
+                    results.push(`<div class="result-item" style="border-left-color: #f44336;">❌ ${result.name}: ${result.message}</div>`);
+                }
+                
+                // Update progress
+                const progress = ((i + 1) / usersToSimulate.length) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `处理中... ${i + 1}/${usersToSimulate.length} (${Math.round(progress)}%)`;
+                
+                // Allow UI to update
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+            
+            // Show final results
+            resultsList.innerHTML = results.join('');
+            simulationResults.style.display = 'block';
+            
+            // Final message
+            const summary = `模拟完成！成功: ${successCount}, 失败: ${failCount}`;
+            showMessage(summary, successCount > 0 ? 'success' : 'error');
+            
+            // Reload data to show updated statistics
+            await loadData();
+            
+            simulationRunning = false;
+        }
+
+        // 重置模拟数据
+        async function resetSimulation() {
+            if (!confirm('确定要重置所有模拟数据吗？这将清空所有用户！')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/reset', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('模拟数据已重置！', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showMessage('重置失败：' + (result.message || '未知错误'), 'error');
+                }
+            } catch (error) {
+                console.error('重置模拟数据错误:', error);
+                showMessage('网络错误，请稍后再试', 'error');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+    </script>
+</body>
+</html>

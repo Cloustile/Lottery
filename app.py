@@ -91,6 +91,10 @@ async def admin(request: Request):
 async def view_page(request: Request):
     return templates.TemplateResponse("view.html", {"request": request})
 
+@app.get("/test", response_class=HTMLResponse)
+async def test_page(request: Request):
+    return templates.TemplateResponse("test.html", {"request": request})
+
 @app.post("/api/login")
 async def login(login_request: LoginRequest):
     data = load_data()
