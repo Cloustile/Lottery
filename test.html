@@ -439,17 +439,17 @@
         
         <!-- 模拟抽奖控制面板 -->
         <div class="panel">
-            <h2>模拟抽奖控制</h2>
+            <h2>模拟抽奖</h2>
             <div id="messageBox" class="message"></div>
             
             <div class="input-group">
-                <label>模拟登录用户数量（从现有用户中随机选择）</label>
+                <label>模拟抽奖用户数量</label>
                 <input type="number" id="simulationCount" min="1" max="1000" value="10" placeholder="请输入要模拟的用户数量">
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="simulateLoginAndDraw()">开始模拟抽奖</button>
-                <button class="btn btn-danger" onclick="resetSimulation()">重置抽奖信息</button>
+                <button class="btn btn-primary" onclick="simulateLoginAndDraw()">开始</button>
+                <button class="btn btn-danger" onclick="resetSimulation()">清空抽奖信息</button>
             </div>
             
             <div class="progress-container" id="progressContainer" style="display: none;">
