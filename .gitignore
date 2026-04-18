@@ -78,3 +78,9 @@ github_actions_deploy.pub
 *.bak
 lottery_data.backup.*.json
 lottery_data.json
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
